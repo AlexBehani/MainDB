@@ -1,0 +1,122 @@
+VERSION 1.0 CLASS
+BEGIN
+  MultiUse = -1  'True
+END
+Attribute VB_Name = "Form_EquipmentForm"
+Attribute VB_GlobalNameSpace = False
+Attribute VB_Creatable = True
+Attribute VB_PredeclaredId = True
+Attribute VB_Exposed = False
+Option Compare Database
+
+Private Sub Cancel_Click()
+
+If Not (Equip Is Nothing) Then Set Equip = Nothing
+DoCmd.Close acForm, "EquipmentForm"
+DoCmd.OpenForm "MainMenu"
+
+End Sub
+
+Private Sub Delete_Click()
+
+If (Nz(Equip.ID, 0) = 0) Then Exit Sub
+
+If (MsgBox("You're about to delete a record" & vbNewLine & "Are you sure?", vbQuestion + vbYesNo, "Delete?") = vbNo) Then Exit Sub
+Call Delete_Eq
+Clear_Field
+Me.ServiceCheck = 0
+Me.Equipments_subform.Requery
+
+End Sub
+
+Private Sub Form_Current()
+Set Equip = New Equipments
+Equip.Edit = False
+Me.ServiceCheck = 0
+
+
+End Sub
+
+Private Sub PMCombo_AfterUpdate()
+
+Dim str As String
+str = ""
+
+If Not (Nz(Me.PMList.ListCount, 0) = 0) Then
+    
+    For i = 0 To Me.PMList.ListCount
+    
+        If Me.PMCombo.Column(3) = Me.PMList.Column(3, i) Then
+        
+            MsgBox "No duplication allwoed", vbCritical, "Error"
+            Exit Sub
+        End If
+    Next
+    
+End If
+
+For i = 0 To 3
+str = str & Me.PMCombo.Column(i) & ";"
+Next i
+
+Me.PMList.AddItem str
+
+
+End Sub
+
+Private Sub PMList_DblClick(Cancel As Integer)
+If (Nz(Me.PMList.value, "") = "") Then Exit Sub
+Me.PMList.RemoveItem (Me.PMList.value)
+Me.PMList.value = ""
+
+Me.PMList.Requery
+End Sub
+
+Private Sub Save_Click()
+
+If (Em_Field) Then Exit Sub
+
+Dim Arr() As Variant
+Dim i As Integer
+Dim j As Integer
+
+j = Me.PMList.ListCount
+'i = Me.PMList.ListCount
+'ReDim test(1 To i)
+ReDim Arr(j)
+
+For i = 0 To j - 1
+
+    Arr(i) = Me.PMList.Column(3, i)
+
+Next i
+
+
+Equip.EquipmentNumber = Me.EquipmentN
+Equip.Description = Me.EquipmentN
+Equip.AssetNumber = Me.AssetNumber
+Equip.SerialNumber = Me.SerialNumber
+Equip.ModelNumber = Me.ModelNumber
+Equip.Location = Me.LocationCombo
+Equip.Service = Nz(Me.ServiceCheck, 0)
+Equip.Note = Me.NoteCombo
+Equip.SafetyIntstruction = Me.SafetyInstruction
+Equip.PM = Me.PMCombo
+Equip.Saftey = Me.Safety
+Equip.DateRegistered = Me.DateReqistered
+Equip.GNoteID = Me.NoteCombo.Column(1)
+
+
+Call Save_GenPM(Arr())
+Call Save_Eq
+Call Clear_Field
+Me.PMList.RowSource = ""
+Me.ServiceCheck = 0
+Me.Equipments_subform.Requery
+
+
+
+
+End Sub
+
+
