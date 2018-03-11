@@ -16,7 +16,7 @@ If (PMTK.Edit = False) Then
     PM!Type = PMTK.PMType
     PM!Description = PMTK.Description
     PM!AssignedTo = PMTK.AssignedTo
-    PM!DownTime = PMTK.DownTime
+'    PM!DownTime = PMTK.DownTime
     PM!frequency = PMTK.FrequencyDays
     PM.Update
     
@@ -30,7 +30,7 @@ ElseIf (PMTK.Edit = True) Then
     PM!Type = PMTK.PMType
     PM!Description = PMTK.Description
     PM!AssignedTo = PMTK.AssignedTo
-    PM!DownTime = PMTK.DownTime
+'    PM!DownTime = PMTK.DownTime
     PM.Update
     
 'ElseIf (action = "Delete") Then
@@ -66,7 +66,7 @@ PMTaskTemp.PMType = PMTK!Type
 PMTaskTemp.AssignedTo = PMTK!AssignedTo
 PMTaskTemp.Description = PMTK!Description
 PMTaskTemp.FrequencyDays = PMTK!frequency
-PMTaskTemp.DownTime = PMTK!DownTime
+'PMTaskTemp.DownTime = PMTK!DownTime
 
 Set Load_PMTask = PMTaskTemp
 

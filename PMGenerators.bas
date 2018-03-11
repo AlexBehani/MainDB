@@ -3,6 +3,7 @@ Option Compare Database
 
 Public Sub PMGenerator()
 
+Dim AvailNo As Integer
 Dim db As Database
 Dim GenPM As Recordset
 Dim WO As Recordset
@@ -10,8 +11,8 @@ Dim Mdate As Integer, Ydate As Integer, MCr As Integer, YCr As Integer
 
 Set db = CurrentDb
 Set GenPM = db.OpenRecordset("GeneralPM")
-Set WO = db.OpenRecordset("WO")
-
+Set PMWO = db.OpenRecordset("PMWO")
+AvailNo = MinAvailPMWONo
 GenPM.MoveFirst
 Do While Not GenPM.EOF
 
@@ -21,22 +22,24 @@ Mdate = Month(GenPM!DateRegistered)
 Ydate = Year(GenPM!DateRegistered)
 
     If Not (YCr = Ydate And MCr = Mdate) Then
-    
+        
         If GenPM!frequency = "Bi Annaully" Then
             If (Ydate <> YCr And Mdate = MCr And YCr > Ydate) Then
                 If ((YCr - Ydate) Mod 2) = 0 Then
                     
-                    WO.AddNew
-                    WO!WODescription = GenPM!Description
-                    WO!ModelNumber = GenPM!ModelNumber
-                    WO!Scheduled = False
-                    WO!Type = GenPM!TaskType
-                    WO!WORequest = "PM"
-                    WO!AssignedTo = GenPM!AssignedTo
-                    WO!Completed = False
-                    WO!Task = GenPM!TaskName
-                    WO!DueDate = DueDate(GenPM!DateRegistered)
-                    WO.Update
+                    PMWO.AddNew
+                    PMWO!WODescription = GenPM!Description
+                    PMWO!ModelNumber = GenPM!ModelNumber
+                    
+                    PMWO!WOType = GenPM!TaskType
+                    PMWO!WORequest = "PM"
+                    PMWO!AssignedTo = GenPM!AssignedTo
+                    PMWO!Completed = False
+                    PMWO!Task = GenPM!TaskName
+                    PMWO!DueDate = DueDate(GenPM!DateRegistered)
+                    PMWO!WONumber = AvailNo
+                    PMWO.Update
+                    AvailNo = AvailNo + 1
                     
                 End If
             End If
@@ -44,122 +47,127 @@ Ydate = Year(GenPM!DateRegistered)
         ElseIf GenPM!frequency = "Annually" Then
             If (Ydate <> YCr And Mdate = MCr) Then
                     
-                    WO.AddNew
-                    WO!WODescription = GenPM!Description
-                    WO!ModelNumber = GenPM!ModelNumber
-                    WO!Scheduled = False
-                    WO!Type = GenPM!TaskType
-                    WO!WORequest = "PM"
-                    WO!AssignedTo = GenPM!AssignedTo
-                    WO!Completed = False
-                    WO!Task = GenPM!TaskName
-
-                    WO!DueDate = DueDate(GenPM!DateRegistered)
-
-                    WO.Update
+                    PMWO.AddNew
+                    PMWO!WODescription = GenPM!Description
+                    PMWO!ModelNumber = GenPM!ModelNumber
                     
+                    PMWO!WOType = GenPM!TaskType
+                    PMWO!WORequest = "PM"
+                    PMWO!AssignedTo = GenPM!AssignedTo
+                    PMWO!Completed = False
+                    PMWO!Task = GenPM!TaskName
+
+                    PMWO!DueDate = DueDate(GenPM!DateRegistered)
+                    PMWO!WONumber = AvailNo
+                    PMWO.Update
+                    AvailNo = AvailNo + 1
             End If
             
         ElseIf GenPM!frequency = "Semi Annually" Then
             If (Ydate = YCr And Mdate <> MCr And MCr > Mdate) Then
                 If ((MCr - Mdate) Mod 6) Then
                     
-                    WO.AddNew
-                    WO!WODescription = GenPM!Description
-                    WO!ModelNumber = GenPM!ModelNumber
-                    WO!Scheduled = False
-                    WO!Type = GenPM!TaskType
-                    WO!WORequest = "PM"
-                    WO!AssignedTo = GenPM!AssignedTo
-                    WO!Completed = False
-                    WO!Task = GenPM!TaskName
-
-                    WO!DueDate = DueDate(GenPM!DateRegistered)
-
-                    WO.Update
+                    PMWO.AddNew
+                    PMWO!WODescription = GenPM!Description
+                    PMWO!ModelNumber = GenPM!ModelNumber
                     
+                    PMWO!WOType = GenPM!TaskType
+                    PMWO!WORequest = "PM"
+                    PMWO!AssignedTo = GenPM!AssignedTo
+                    PMWO!Completed = False
+                    PMWO!Task = GenPM!TaskName
+
+                    PMWO!DueDate = DueDate(GenPM!DateRegistered)
+                    PMWO!WONumber = AvailNo
+                    PMWO.Update
+                    AvailNo = AvailNo + 1
                 End If
             ElseIf (Ydate <> YCr And Mdate <> MCr) Then
                 If (Abs(Mdate - MCr) Mod 6) = 0 Then
                 
-                    WO.AddNew
-                    WO!WODescription = GenPM!Description
-                    WO!ModelNumber = GenPM!ModelNumber
-                    WO!Scheduled = False
-                    WO!WOType = GenPM!TaskType
-                    WO!WORequest = "PM"
-                    WO!AssignedTo = GenPM!AssignedTo
-                    WO!Completed = False
-                    WO!Task = GenPM!TaskName
-                    WO!DueDate = DueDate(GenPM!DateRegistered)
-                    WO.Update
+                    PMWO.AddNew
+                    PMWO!WODescription = GenPM!Description
+                    PMWO!ModelNumber = GenPM!ModelNumber
                     
+                    PMWO!WOType = GenPM!TaskType
+                    PMWO!WORequest = "PM"
+                    PMWO!AssignedTo = GenPM!AssignedTo
+                    PMWO!Completed = False
+                    PMWO!Task = GenPM!TaskName
+                    PMWO!DueDate = DueDate(GenPM!DateRegistered)
+                    PMWO!WONumber = AvailNo
+                    PMWO.Update
+                    AvailNo = AvailNo + 1
                 End If
             ElseIf (Ydate <> YCr And Mdate = MCr) Then
             
-                    WO.AddNew
-                    WO!WODescription = GenPM!Description
-                    WO!ModelNumber = GenPM!ModelNumber
-                    WO!Scheduled = False
-                    WO!WOType = GenPM!TaskType
-                    WO!WORequest = "PM"
-                    WO!AssignedTo = GenPM!AssignedTo
-                    WO!Completed = False
-                    WO!Task = GenPM!TaskName
-                    WO!DueDate = DueDate(GenPM!DateRegistered)
-                    WO.Update
+                    PMWO.AddNew
+                    PMWO!WODescription = GenPM!Description
+                    PMWO!ModelNumber = GenPM!ModelNumber
                     
+                    PMWO!WOType = GenPM!TaskType
+                    PMWO!WORequest = "PM"
+                    PMWO!AssignedTo = GenPM!AssignedTo
+                    PMWO!Completed = False
+                    PMWO!Task = GenPM!TaskName
+                    PMWO!DueDate = DueDate(GenPM!DateRegistered)
+                    PMWO!WONumber = AvailNo
+                    PMWO.Update
+                    AvailNo = AvailNo + 1
             End If
             
         ElseIf GenPM!frequency = "Quarterly" Then
             If (Ydate = YCr And Mdate <> MCr And MCr > Mdate) Then
                 If ((MCr - Mdate) Mod 3) = 0 Then
                     
-                    WO.AddNew
-                    WO!WODescription = GenPM!Description
-                    WO!ModelNumber = GenPM!ModelNumber
-                    WO!Scheduled = False
-                    WO!WOType = GenPM!TaskType
-                    WO!WORequest = "PM"
-                    WO!AssignedTo = GenPM!AssignedTo
-                    WO!Completed = False
-                    WO!Task = GenPM!TaskName
-                    WO!DueDate = DueDate(GenPM!DateRegistered)
-                    WO.Update
+                    PMWO.AddNew
+                    PMWO!WODescription = GenPM!Description
+                    PMWO!ModelNumber = GenPM!ModelNumber
                     
+                    PMWO!WOType = GenPM!TaskType
+                    PMWO!WORequest = "PM"
+                    PMWO!AssignedTo = GenPM!AssignedTo
+                    PMWO!Completed = False
+                    PMWO!Task = GenPM!TaskName
+                    PMWO!DueDate = DueDate(GenPM!DateRegistered)
+                    PMWO!WONumber = AvailNo
+                    PMWO.Update
+                    AvailNo = AvailNo + 1
                 End If
             
             ElseIf (Ydate <> YCr And Mdate <> MCr And YCr > Ydate) Then
                 If (Abs(MCr - Mdate) Mod 3 = 0) Then
                     
-                    WO.AddNew
-                    WO!WODescription = GenPM!Description
-                    WO!ModelNumber = GenPM!ModelNumber
-                    WO!Scheduled = False
-                    WO!WOType = GenPM!TaskType
-                    WO!WORequest = "PM"
-                    WO!AssignedTo = GenPM!AssignedTo
-                    WO!Completed = False
-                    WO!Task = GenPM!TaskName
-                    WO!DueDate = DueDate(GenPM!DateRegistered)
-                    WO.Update
+                    PMWO.AddNew
+                    PMWO!WODescription = GenPM!Description
+                    PMWO!ModelNumber = GenPM!ModelNumber
                     
+                    PMWO!WOType = GenPM!TaskType
+                    PMWO!WORequest = "PM"
+                    PMWO!AssignedTo = GenPM!AssignedTo
+                    PMWO!Completed = False
+                    PMWO!Task = GenPM!TaskName
+                    PMWO!DueDate = DueDate(GenPM!DateRegistered)
+                    PMWO!WONumber = AvailNo
+                    PMWO.Update
+                    AvailNo = AvailNo + 1
                 End If
                 
             ElseIf (Ydate <> YCr And MCr = Mdate) Then
             
-                    WO.AddNew
-                    WO!WODescription = GenPM!Description
-                    WO!ModelNumber = GenPM!ModelNumber
-                    WO!Scheduled = False
-                    WO!WOType = GenPM!TaskType
-                    WO!WORequest = "PM"
-                    WO!AssignedTo = GenPM!AssignedTo
-                    WO!Completed = False
-                    WO!Task = GenPM!TaskName
-                    WO!DueDate = DueDate(GenPM!DateRegistered)
-                    WO.Update
+                    PMWO.AddNew
+                    PMWO!WODescription = GenPM!Description
+                    PMWO!ModelNumber = GenPM!ModelNumber
                     
+                    PMWO!WOType = GenPM!TaskType
+                    PMWO!WORequest = "PM"
+                    PMWO!AssignedTo = GenPM!AssignedTo
+                    PMWO!Completed = False
+                    PMWO!Task = GenPM!TaskName
+                    PMWO!DueDate = DueDate(GenPM!DateRegistered)
+                    PMWO!WONumber = AvailNo
+                    PMWO.Update
+                    AvailNo = AvailNo + 1
             End If
         End If
     End If
@@ -170,7 +178,7 @@ GenPM.MoveNext
 Loop
 
 Set GenPM = Nothing
-Set WO = Nothing
+Set PMWO = Nothing
 Set db = Nothing
 
 End Sub
@@ -201,13 +209,13 @@ Dim GPM As Recordset
 Set db = CurrentDb
 
 
-Set GPM = db.OpenRecordset("SELECT * FROM WO WHERE month(DueDate) =" & Month(Date) & " AND Year(DueDate)=" & Year(Date))
+Set GPM = db.OpenRecordset("SELECT * FROM PMWO WHERE month(DueDate) =" & Month(Date) & " AND Year(DueDate)=" & Year(Date))
 
 
 If Not (GPM.RecordCount > 0) Then Exit Sub
 GPM.MoveLast
 GPM.MoveFirst
-MsgBox GPM.RecordCount
+
 Do While Not GPM.EOF
 
 GPM.Delete

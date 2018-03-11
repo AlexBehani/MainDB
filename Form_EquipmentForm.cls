@@ -24,7 +24,7 @@ If (Nz(Equip.ID, 0) = 0) Then Exit Sub
 If (MsgBox("You're about to delete a record" & vbNewLine & "Are you sure?", vbQuestion + vbYesNo, "Delete?") = vbNo) Then Exit Sub
 Call Delete_Eq
 Clear_Field
-Me.ServiceCheck = 0
+'Me.ServiceCheck = 0
 Me.Equipments_subform.Requery
 
 End Sub
@@ -32,7 +32,7 @@ End Sub
 Private Sub Form_Current()
 Set Equip = New Equipments
 Equip.Edit = False
-Me.ServiceCheck = 0
+
 
 
 End Sub
@@ -81,6 +81,11 @@ Dim i As Integer
 Dim j As Integer
 
 j = Me.PMList.ListCount
+
+If Not (j > 0) Then
+MsgBox "Please select PM", vbCritical, ""
+Exit Sub
+End If
 'i = Me.PMList.ListCount
 'ReDim test(1 To i)
 ReDim Arr(j)
@@ -97,23 +102,18 @@ Equip.Description = Me.EquipmentN
 Equip.AssetNumber = Me.AssetNumber
 Equip.SerialNumber = Me.SerialNumber
 Equip.ModelNumber = Me.ModelNumber
-Equip.Location = Me.LocationCombo
-Equip.Service = Nz(Me.ServiceCheck, 0)
-Equip.Note = Me.NoteCombo
-Equip.SafetyIntstruction = Me.SafetyInstruction
-Equip.PM = Me.PMCombo
-Equip.Saftey = Me.Safety
 Equip.DateRegistered = Me.DateReqistered
-Equip.GNoteID = Me.NoteCombo.Column(1)
+Equip.EquipmentType = Me.EquipmentTypeCombo
+Equip.Manufacturer = Me.Manufacturer
+Equip.System = Me.SystemCombo
+Equip.Status = Me.StatusCombo
 
 
 Call Save_GenPM(Arr())
 Call Save_Eq
 Call Clear_Field
 Me.PMList.RowSource = ""
-Me.ServiceCheck = 0
 Me.Equipments_subform.Requery
-
 
 
 

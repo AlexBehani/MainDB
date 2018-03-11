@@ -15,7 +15,7 @@ If Not GNote.Edit Then
     Note!Title = GNote.Title
     Note!Description = GNote.Description
     Note!DateVar = GNote.Date_
-    Note!User = GNote.User
+'    Note!User = GNote.User
     Note!Comment = GNote.Comment
 
     Note.Update
@@ -27,7 +27,7 @@ Else
     Note!Title = GNote.Title
     Note!Description = GNote.Description
     Note!DateVar = GNote.Date_
-    Note!User = GNote.User
+'    Note!User = GNote.User
     Note!Comment = GNote.Comment
     Note.Update
     
@@ -53,7 +53,7 @@ Note.MoveFirst
 
 NoteTemp.Description = Note!Description
 
-NoteTemp.User = Note!User
+'NoteTemp.User = Note!User
 NoteTemp.Comment = Note!Comment
 NoteTemp.Date_ = Note!DateVar
 

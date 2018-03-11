@@ -13,7 +13,7 @@ Public ID As Integer
 Public Title As String
 Public Description As String
 Public Date_ As Date
-Public User As String
+'Public User As String
 Public Comment As String
 Public Edit As Boolean
 

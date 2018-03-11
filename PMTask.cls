@@ -14,7 +14,7 @@ Public PMType As String
 Public Description As String
 Public AssignedTo As String
 Public FrequencyDays As String
-Public DownTime As Integer
+
 Public Edit As Boolean
 Public ID As Integer
 

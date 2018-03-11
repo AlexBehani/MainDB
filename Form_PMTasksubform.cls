@@ -24,7 +24,7 @@ Forms!PM_Task.TaskType = PMTemp.PMType
 Forms!PM_Task.AssignedTo = PMTemp.AssignedTo
 Forms!PM_Task.Description = PMTemp.Description
 Forms!PM_Task.FrequencyDays = PMTemp.FrequencyDays
-Forms!PM_Task.DownTime = PMTemp.DownTime
+'Forms!PM_Task.DownTime = PMTemp.DownTime
 
 Set PMTemp = Nothing
 
