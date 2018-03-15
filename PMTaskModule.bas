@@ -30,6 +30,7 @@ ElseIf (PMTK.Edit = True) Then
     PM!Type = PMTK.PMType
     PM!Description = PMTK.Description
     PM!AssignedTo = PMTK.AssignedTo
+    PM!frequency = PMTK.FrequencyDays
 '    PM!DownTime = PMTK.DownTime
     PM.Update
     
@@ -49,14 +50,14 @@ End Sub
 
 
 
-Public Function Load_PMTask(ID As Integer) As PMtask
+Public Function Load_PMTask(ID As Integer) As PMTask
 
 
 Dim db As Database
 Dim PMTK As Recordset
-Dim PMTaskTemp As PMtask
+Dim PMTaskTemp As PMTask
 
-Set PMTaskTemp = New PMtask
+Set PMTaskTemp = New PMTask
 Set db = CurrentDb
 Set PMTK = db.OpenRecordset("SELECT * FROM PMTask WHERE PMID= " & ID)
 PMTK.MoveFirst
@@ -82,15 +83,15 @@ Public Sub Delete_PMTask()
 
 
 Dim db As Database
-Dim PMtask As Recordset
+Dim PMTask As Recordset
 
 Set db = CurrentDb
-Set PMtask = db.OpenRecordset("SELECT * FROM PMTask WHERE PMID=" & PMTK.ID)
-PMtask.MoveFirst
-PMtask.Delete
+Set PMTask = db.OpenRecordset("SELECT * FROM PMTask WHERE PMID=" & PMTK.ID)
+PMTask.MoveFirst
+PMTask.Delete
 
 
-Set PMtask = Nothing
+Set PMTask = Nothing
 Set db = Nothing
 
 

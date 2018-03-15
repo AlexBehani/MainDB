@@ -39,8 +39,8 @@ End Sub
 
 Private Sub PMCombo_AfterUpdate()
 
-Dim str As String
-str = ""
+Dim Str As String
+Str = ""
 
 If Not (Nz(Me.PMList.ListCount, 0) = 0) Then
     
@@ -56,10 +56,11 @@ If Not (Nz(Me.PMList.ListCount, 0) = 0) Then
 End If
 
 For i = 0 To 3
-str = str & Me.PMCombo.Column(i) & ";"
+Str = Str & Me.PMCombo.Column(i) & ";"
+
 Next i
 
-Me.PMList.AddItem str
+Me.PMList.AddItem Str
 
 
 End Sub
@@ -76,7 +77,7 @@ Private Sub Save_Click()
 
 If (Em_Field) Then Exit Sub
 
-Dim Arr() As Variant
+Dim arr() As Variant
 Dim i As Integer
 Dim j As Integer
 
@@ -88,11 +89,11 @@ Exit Sub
 End If
 'i = Me.PMList.ListCount
 'ReDim test(1 To i)
-ReDim Arr(j)
+ReDim arr(j)
 
 For i = 0 To j - 1
 
-    Arr(i) = Me.PMList.Column(3, i)
+    arr(i) = Me.PMList.Column(3, i)
 
 Next i
 
@@ -109,7 +110,7 @@ Equip.System = Me.SystemCombo
 Equip.Status = Me.StatusCombo
 
 
-Call Save_GenPM(Arr())
+Call Save_GenPM(arr())
 Call Save_Eq
 Call Clear_Field
 Me.PMList.RowSource = ""

@@ -1,49 +1,40 @@
 Attribute VB_Name = "WOModule"
 Option Compare Database
 
-Public Sub Save_WO()
+Public Function Save_WO()
+
 
 Dim db As Database
 Dim WORs As Recordset
 
 Set db = CurrentDb
+Set WORs = db.OpenRecordset("WO")
 
-If Not WO.Edit Then
-    
-    Set WORs = db.OpenRecordset("WO")
-    WORs.AddNew
-    WORs!WODescription = WO.WODescription
-    WORs!ModelNumber = WO.ModelNumber
-    WORs!Scheduled = WO.Scheduled
-    WORs!WOType = WO.WOType
-    WORs!WORequest = WO.WORequest
-    WORs!AssignedTo = WO.AssignedTo
-    WORs!Status = WO.Status
-    WORs!Priority = WO.Priority
-'    WORs!wonumber = WONumGen
-    WORs.Update
-Else
+WORs.AddNew
 
-    Set WORs = db.OpenRecordset("SELECT * FROM WO WHERE WOID= " & WO.WOID)
-    WORs.MoveFirst
-    WORs.Edit
-    WORs!WODescription = WO.WODescription
-    WORs!ModelNumber = WO.ModelNumber
-    WORs!Scheduled = WO.Scheduled
-    WORs!WOType = WO.WOType
-    WORs!WORequest = WO.WORequest
-    WORs!AssignedTo = WO.AssignedTo
-    WORs!Status = WO.Status
-    WORs!Priority = WO.Priority
-    WORs.Update
-    
-End If
+WORs!WODescription = WO.WODescription
+WORs!ModelNumber = WO.ModelNumber
+WORs!WOType = WO.WOType
+WORs!WORequest = WO.WORequest
+WORs!AssignedTo = WO.AssignedTo
+WORs!Status = WO.Status
+WORs!Completed = False
+WORs!RequestedDate = WO.RequestedDate
+WORs!DueDate = WO.DueDate
+WORs!WONumber = WO.WONumber
+WORs!AssetNumber = WO.AssetNumber
+WORs!Manufacturer = WO.Manufacturer
+WORs!EngineeringComment = WO.EngineeringComment
+WORs!RequestBy = WO.RequestBy
+WORs!formatwonumber = WO.FormatedWONUmber
+WO.WOID = WORs!WOID
+WORs.Update
 
-Set WORs = Nothing
+
 Set db = Nothing
-WO.Edit = False
-    
-End Sub
+Set WORs = Nothing
+   
+End Function
 
 
 Function Load_WO(ID As Integer) As WO
@@ -63,9 +54,10 @@ WOTemp.WOType = WORs!WOType
 WOTemp.WORequest = WORs!WORequest
 WOTemp.AssignedTo = WORs!AssignedTo
 WOTemp.Status = Nz(WORs!Status, "")
-WOTemp.Priority = Nz(WORs!Priority, "")
+'WOTemp.Priority = Nz(WORs!Priority, "")
 WOTemp.WOID = WORs!WOID
 Set Load_WO = WOTemp
+
 Set db = Nothing
 Set WORs = Nothing
 Set WOTemp = Nothing

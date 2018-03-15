@@ -14,14 +14,19 @@ Public Description As String
 Public AssetNumber As String
 Public EquipmentNumber As String
 Public SerialNumber As String
-Public Location As String
-Public Note As String
-Public Service As Boolean
-Public SafetyIntstruction As String
+'Public Location As String
+'Public Note As String
+'Public Service As Boolean
+'Public SafetyIntstruction As String
 Public PM As String
-Public Saftey As String
+'Public Saftey As String
 Public DateRegistered As Date
 Public ID As Integer
 Public Edit As Boolean
-Public GNoteID As Integer
+'Public GNoteID As Integer
+Public EquipmentType As String
+Public Manufacturer As String
+Public Status As String
+Public System As String
+
 

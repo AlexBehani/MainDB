@@ -43,6 +43,10 @@ End If
 
 Exit Function
 err_handel:
-MsgBox Err.Description
 
+If Err.Number = 2455 Then
+Resume Next
+Else
+MsgBox Err.Description & Err.Number
+End If
 End Function

@@ -19,7 +19,7 @@ Private Sub WOID_Click()
     Forms!WorkOrder.WORequest = WO.WORequest
     Forms!WorkOrder.AssignedTo = WO.AssignedTo
     Forms!WorkOrder.StatusCombo = WO.Status
-    Forms!WorkOrder.PriorityCombo = WO.Priority
+'    Forms!WorkOrder.PriorityCombo = WO.Priority
     
     
     WO.Edit = True
