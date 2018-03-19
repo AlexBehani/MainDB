@@ -9,6 +9,10 @@ Attribute VB_PredeclaredId = True
 Attribute VB_Exposed = False
 Option Compare Database
 
+Private Sub FilterCombo_AfterUpdate()
+Me.PMWorkOrderCombo.RowSource = PMWORowlist("PMWO", Me.FilterCombo)
+End Sub
+
 Private Sub Form_Load()
 Me.PMWorkOrderCombo.RowSource = PMWORowlist("PMWO")
 
