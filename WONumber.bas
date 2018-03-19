@@ -8,7 +8,8 @@ Dim Str As String, j As Integer
 
 C = 6
  Str = ""
- L = C - Len(n)
+
+ L = C - Len(CStr(n))
 
 For j = 0 To L - 1
     Str = Str & 0
