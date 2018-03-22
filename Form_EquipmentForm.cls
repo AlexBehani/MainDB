@@ -99,7 +99,7 @@ Next i
 
 
 Equip.EquipmentNumber = Me.EquipmentN
-Equip.Description = Me.EquipmentN
+Equip.Description = Me.Description
 Equip.AssetNumber = Me.AssetNumber
 Equip.SerialNumber = Me.SerialNumber
 Equip.ModelNumber = Me.ModelNumber
@@ -109,8 +109,9 @@ Equip.Manufacturer = Me.Manufacturer
 Equip.System = Me.SystemCombo
 Equip.Status = Me.StatusCombo
 
-
-Call Save_GenPM(arr())
+If Equip.Status = "In-Service" Then
+    Call Save_GenPM(arr())
+End If
 Call Save_Eq
 Call Clear_Field
 Me.PMList.RowSource = ""
@@ -121,3 +122,8 @@ Me.Equipments_subform.Requery
 End Sub
 
 
+Private Sub StatusCombo_AfterUpdate()
+If Me.StatusCombo = "Out-Of-Service" Or Me.StatusCombo = "Spare" Then
+    MsgBox "Database will not generate PM for " & Me.StatusCombo & " status", vbCritical, "Please note"
+End If
+End Sub
