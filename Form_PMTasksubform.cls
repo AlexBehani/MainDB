@@ -13,14 +13,14 @@ Private Sub PMID_Click()
 On Error GoTo Err
 If (Nz(Me.PMID, "") = "") Then Exit Sub
 
-Dim PMTemp As PMtask
+Dim PMTemp As PMTask
 PMTK.ID = Me.PMID
 
 Set PMTemp = Load_PMTask(Me.PMID)
 PMTK.Edit = True
 
-Forms!PM_Task.TaskName = PMTemp.PMTaskName
-Forms!PM_Task.TaskType = PMTemp.PMType
+'Forms!PM_Task.TaskName = PMTemp.PMTaskName
+'Forms!PM_Task.TaskType = PMTemp.PMType
 Forms!PM_Task.AssignedTo = PMTemp.AssignedTo
 Forms!PM_Task.Description = PMTemp.Description
 Forms!PM_Task.FrequencyDays = PMTemp.FrequencyDays

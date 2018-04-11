@@ -43,7 +43,7 @@ WO.Scheduled = Nz(Me.ScheduledCheck, 0)
 WO.WORequest = Me.WORequest
 WO.AssignedTo = Me.AssignedTo
 WO.Status = Me.StatusCombo
-WO.Priority = Me.PriorityCombo
+'WO.Priority = Me.PriorityCombo
 
 Call Save_WO
 Call Clear_Field

@@ -23,7 +23,7 @@ GNote.Edit = True
 
 Forms!General_Note.Description = TempNote.Description
 Forms!General_Note.Date_ = TempNote.Date_
-Forms!General_Note.User_ = TempNote.User
+'Forms!General_Note.User_ = TempNote.User
 Forms!General_Note.Comment = TempNote.Comment
 
 Set TempNote = Nothing

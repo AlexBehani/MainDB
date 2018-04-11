@@ -9,8 +9,6 @@ Attribute VB_PredeclaredId = True
 Attribute VB_Exposed = False
 Option Compare Database
 
-
-
 Private Sub Command15_Click()
 MsgBox Nz(WOClosing.Completed, 0)
 End Sub
@@ -20,6 +18,10 @@ End Sub
 Private Sub Cancel_Click()
 DoCmd.Close acForm, "WOClosing"
 DoCmd.OpenForm "MainMenu"
+
+If Not (WO Is Nothing) Then Set WO = Nothing
+If Not (WOClosing Is Nothing) Then Set WOClosing = Nothing
+
 End Sub
 
 Private Sub CompleteToggle_Click()
@@ -34,16 +36,41 @@ Me.CompleteToggle.PictureData = ""
 End If
 End Sub
 
+Private Sub FilterCombo_AfterUpdate()
+
+If Me.FilterCombo = "Completed" Then
+    Me.WODropDown.RowSource = "SELECT WO.FormatWONumber, WO.AssetNumber, WO.Manufacturer, " & _
+    "WO.DueDate, WO.ID, WO.taskComment FROM WO WHERE ((Not (Nz(wo.WODescription,'')='')) AND ((WO.Completed)=True));"
+
+
+ElseIf Me.FilterCombo = "Not Completed" Then
+    Me.WODropDown.RowSource = "SELECT WO.FormatWONumber, WO.AssetNumber, WO.Manufacturer, " & _
+    "WO.DueDate, WO.ID, WO.taskComment FROM WO WHERE ((Not (Nz(wo.WODescription,'')='')) AND ((WO.Completed)=False));"
+
+End If
+
+End Sub
+
 Private Sub Form_Load()
 Me.CompleteToggle.Picture = ""
 End Sub
 
 Private Sub SaveCommand_Click()
-On Error GoTo Err
+
+'On Error GoTo Err
 If Nz(Me.WODropDown.Column(0), "") = "" Then
 
     MsgBox "Please select a Work Order", vbOKOnly, "Work Order?"
     Exit Sub
+End If
+
+If Not (Me.CompleteToggle) Then
+
+    If MsgBox("You haven't selected completed!" & vbNewLine & "Would you still like to continue?" _
+    , vbQuestion + vbYesNo) = vbNo Then
+    
+        Exit Sub
+    End If
 End If
 
 If (Em_Field) Then
@@ -51,15 +78,32 @@ If (Em_Field) Then
     Exit Sub
 End If
 
-WOClosing.DateDone = CDate(Me.DateCompleted)
-WOClosing.TimeDone = Me.TimeCompleted
+'If (WOClosing Is Nothing) Then MsgBox "Closed"
+
+WOClosing.DateDone = Me.DateCompleted
 WOClosing.TaskComment = Me.TaskComment
-WOClosing.Employee = Me.Employee
-WOClosing.WOID = Me.WODropDown.Column(0)
+WOClosing.WOID = Me.WODropDown.Column(4)
 If (Me.CompleteToggle) Then WOClosing.Completed = True Else WOClosing.Completed = False
 
 Call Save_WOClosing
-MsgBox "Saved", vbOKOnly, ""
+MsgBox "Saved", vbOKOnly + vbInformation, ""
+
+If (WOClosing.Completed) Then
+
+    If (MsgBox("Would you like to update the Date Registered " & _
+    "for an associated PM task?", vbQuestion + vbYesNo, "Update Date Reqister?") = vbYes) Then
+    
+        DoCmd.Close acForm, "WOClosing"
+        DoCmd.OpenForm "GPMTaskList"
+        Exit Sub
+    End If
+End If
+
+    Set WOClosing = New WOClosing
+    Set WO = New WO
+    Me.CompleteToggle.Picture = ""
+    Me.SubFormWorkOrder.Requery
+    Clear_Field
 
 Exit Sub
 Err:
@@ -69,19 +113,26 @@ End Sub
 
 Private Sub WODropDown_AfterUpdate()
 
-Set WO = Load_WO(Me.WODropDown.Column(0))
+Set WO = Load_WO("WO", Me.WODropDown.Column(4))
 
-If Not (Nz(Me.WODropDown.Column(4), "") = "") Then
-    Set WOClosing = Load_WOClosing(Me.WODropDown.Column(0))
+If Not (Nz(Me.WODropDown.Column(5), "") = "") Then
+    Set WOClosing = Load_WOClosing("WO", Me.WODropDown.Column(4))
     
-    Me.DateCompleted = WOClosing.DateDone
-    Me.TimeCompleted = WOClosing.TimeDone
-    Me.TaskComment = WOClosing.TaskComment
-    Me.Employee = WOClosing.Employee
+    If (WOClosing.DateDone = "12/30/1899") Then
+        Me.DateCompleted = Null
+    Else
+        Me.DateCompleted = WOClosing.DateDone
+    End If
+    If (WOClosing.TaskComment = "") Then
+        Me.TaskComment = Null
+    Else
+        Me.TaskComment = WOClosing.TaskComment
+    End If
     WOClosing.Edit = True
-    WOClosing.WOID = Me.WODropDown.Column(0)
+    WOClosing.WOID = Me.WODropDown.Column(4)
     If (WOClosing.Completed) Then
             Me.CompleteToggle.Picture = "Done"
+            Me.CompleteToggle = True
         Else
             Me.CompleteToggle.Picture = ""
     End If
@@ -94,14 +145,21 @@ Else
     Clear_Field
 End If
     
-    Me!SubFormWorkOrder.Form!WODescription = WO.WODescription
-    Me!SubFormWorkOrder.Form!ModelN = WO.ModelNumber
-    Me!SubFormWorkOrder.Form!ScheduledCheck = WO.Scheduled
+    Me!SubFormWorkOrder.Form!WONumber = WO.WONumber
+    Me!SubFormWorkOrder.Form!AssetNumber = WO.AssetNumber
+    Me!SubFormWorkOrder.Form!DueDate = WO.DueDate
+    Me!SubFormWorkOrder.Form!RequestedBy = WO.RequestBy
+    Me!SubFormWorkOrder.Form!RequestedDate = WO.RequestedDate
+    Me!SubFormWorkOrder.Form!WOType = WO.WOType
+    Me!SubFormWorkOrder.Form!Manufacturer = WO.Manufacturer
+    Me!SubFormWorkOrder.Form!Status = WO.Status
     Me!SubFormWorkOrder.Form!WORequest = WO.WORequest
-    Me!SubFormWorkOrder.Form!AssignedTo = WO.AssignedTo
-    Me!SubFormWorkOrder.Form!StatusCombo = WO.Status
-    Me!SubFormWorkOrder.Form!PriorityCombo = WO.Priority
+    Me!SubFormWorkOrder.Form!Comment = WO.EngineeringComment
+    Me!SubFormWorkOrder.Form!Description = WO.WODescription
     
-    Set WO = Nothing
+
+'    Me!SubFormWorkOrder.Form!PriorityCombo = WO.Priority
+    
+'    Set WO = Nothing
 
 End Sub

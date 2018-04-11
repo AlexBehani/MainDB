@@ -22,7 +22,7 @@ If (Em_Field) Then Exit Sub
 
 GNote.Description = Me.Description
 GNote.Date_ = Me.Date_
-GNote.User = Me.User_
+'GNote.User = Me.User_
 GNote.Comment = Me.Comment
 
 Call Save_Note

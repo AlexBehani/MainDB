@@ -15,11 +15,24 @@ DoCmd.OpenForm "MainMenu"
 End Sub
 
 Private Sub Form_Load()
-Label7.Caption = "PM Generation for the month of " & MonthName(Month(Date))
+Label7.Caption = "PM Generation for the month of " & MonthName(Month(Date) + 1)
 End Sub
 
 Private Sub PMGenCommand_Click()
+Dim i As Integer
 
+MsgBox "It might take a few minutes!" & vbNewLine & vbNewLine _
+& "please wait", vbInformation + vbOKOnly, ""
 Call DeleteOldPM
 Call PMGenerator
+
+i = RightOUtterJOin
+If i = 0 Then
+MsgBox "You are all set!", vbInformation, ""
+Else
+MsgBox "Done" & vbNewLine & vbNewLine & _
+"Generated " & i & " PM(s)", vbInformation, ""
+End If
+'Call DeleteOldPM
+
 End Sub

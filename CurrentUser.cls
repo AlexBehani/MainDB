@@ -10,8 +10,8 @@ Attribute VB_Exposed = False
 Option Compare Database
 
 Private CurrentUser As String
-Public FName As String
-Public LName As String
+Public Fname As String
+Public Lname As String
 
 
 Property Let User(value As String)
@@ -24,6 +24,6 @@ End Property
 
 
 Function FullName()
-FullName = FName & " " & LName
+FullName = Fname & " " & Lname
 End Function
 

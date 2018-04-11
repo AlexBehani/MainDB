@@ -9,14 +9,14 @@ Attribute VB_PredeclaredId = False
 Attribute VB_Exposed = False
 Option Compare Database
 
-Public FName As String
-Public LName As String
+Public Fname As String
+Public Lname As String
 Public FullName As String
 Public UserID As Integer
 
 
 
 Property Get GetFullName() As String
-GetFullName = FName & " " & LName
+GetFullName = Fname & " " & Lname
 
 End Property

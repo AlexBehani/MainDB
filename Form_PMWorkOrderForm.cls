@@ -18,31 +18,35 @@ DoCmd.OpenForm "MainMenu"
 End Sub
 
 Private Sub Form_Load()
+
+
 Me.WONumber = PMWO.FormatedWONUmber
 Me.AssetNumber = PMWO.AssetNumber
 Me.DueDate = PMWO.DueDate
 Me.RequestedBy = "PM"
 'Me.RequestedDate = Me.DueDate
-Me.WOType = PMWO.WOType
+'Me.WOType = PMWO.WOType
 Me.RequestedWork = PMWO.WORequest
 'Me.Comment = pmwo.EngineeringComment
 Me.Description = PMWO.WODescription
 Me.Manufacturer = PMWO.Manufacturer
 Me.Comment = Nz(PMWO.EngineeringComment, "")
 Me.Status = PMWO.Status
-Me.RequestedDate = Nz(PMWO.RequestedDate, 0)
-
-
-
+If (PMWO.RequestedDate = "12:00:00 AM") Then
+    Me.RequestedDate = ""
+Else
+    Me.RequestedDate = PMWO.RequestedDate
+End If
+'Me.RequestedDate = Nz(PMWO.RequestedDate, "")
 
 End Sub
 
 Private Sub PrintCommand_Click()
-If (Nz(Me.Comment, "") = "") Then
-
-    MsgBox "Please add 'Engineering Comment", vbInformation, ""
-    Exit Sub
-End If
+'If (Nz(Me.Comment, "") = "") Then
+'
+'    MsgBox "Please add 'Engineering Comment", vbInformation, ""
+'    Exit Sub
+'End If
 
 
 If (Nz(Me.RequestedDate, "") = "" Or Me.RequestedDate = "12:00:00 AM") Then
@@ -52,14 +56,17 @@ If (Nz(Me.RequestedDate, "") = "" Or Me.RequestedDate = "12:00:00 AM") Then
 End If
 
 
-
-PMWO.EngineeringComment = Me.Comment
+PMWO.WODescription = Nz(Me.Description, "")
+PMWO.EngineeringComment = Nz(Me.Comment, "")
 PMWO.RequestedDate = Me.RequestedDate
 Call Save_PMWO
 
 DoCmd.OpenReport "PMWOReport", acViewNormal, , "[woid]=" & PMWO.WOID
 
+MsgBox "Please pick up your report" & vbNewLine & "It was sent to " & _
+Application.Printer.DeviceName, vbInformation, ""
 
+Clear_Field
 
 
 

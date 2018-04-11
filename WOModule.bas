@@ -14,7 +14,7 @@ WORs.AddNew
 
 WORs!WODescription = WO.WODescription
 WORs!ModelNumber = WO.ModelNumber
-WORs!WOType = WO.WOType
+'WORs!WOType = WO.WOType
 WORs!WORequest = WO.WORequest
 WORs!AssignedTo = WO.AssignedTo
 WORs!Status = WO.Status
@@ -27,12 +27,82 @@ WORs!Manufacturer = WO.Manufacturer
 WORs!EngineeringComment = WO.EngineeringComment
 WORs!RequestBy = WO.RequestBy
 WORs!formatwonumber = WO.FormatedWONUmber
-WO.WOID = WORs!WOID
+'WO.WOID = WORs!WOID
 WORs.Update
 
 
 Set db = Nothing
 Set WORs = Nothing
+   
+End Function
+
+Public Function FindWOID(WOFormatnumber As String) As Integer
+
+Dim db As Database
+Dim WORecordset As Recordset
+
+Set db = CurrentDb
+Set WORecordset = db.OpenRecordset("SELECT ID FROM WO WHERE FormatWONUmber = '" & WOFormatnumber & "'")
+
+If WORecordset.RecordCount > 0 Then
+    WORecordset.MoveFirst
+    FindWOID = WORecordset!ID
+Else
+
+    Set WORecordset = db.OpenRecordset("SELECT TOP(ID) FROM WO")
+    FindWOID = WORecordset!ID
+
+End If
+
+Set db = Nothing
+Set WORecordset = Nothing
+
+
+
+End Function
+
+
+
+Public Function Update_WO(ID As Integer)
+
+
+Dim db As Database
+Dim WOR As Recordset
+
+Set db = CurrentDb
+
+                        
+
+Set WOR = db.OpenRecordset("SELECT WODescription, ModelNumber, WORequest, " & _
+                            "AssignedTo, Status, Completed, RequestedDate, " & _
+                            "DueDate, WONumber, AssetNumber, Manufacturer, " & _
+                            "EngineeringComment, RequestBy, formatwonumber FROM WO WHERE ID =" & ID)
+
+
+
+WOR.Edit
+
+WOR!WODescription = WO.WODescription
+WOR!ModelNumber = WO.ModelNumber
+'WOR!WOType = WO.WOType
+WOR!WORequest = WO.WORequest
+WOR!AssignedTo = WO.AssignedTo
+WOR!Status = WO.Status
+WOR!Completed = False
+WOR!RequestedDate = WO.RequestedDate
+WOR!DueDate = WO.DueDate
+WOR!WONumber = WO.WONumber
+WOR!AssetNumber = WO.AssetNumber
+WOR!Manufacturer = WO.Manufacturer
+WOR!EngineeringComment = WO.EngineeringComment
+WOR!RequestBy = WO.RequestBy
+WOR!formatwonumber = WO.FormatedWONUmber
+'WO.WOID = WOR!WOID
+WOR.Update
+
+
+Set db = Nothing
+Set WOR = Nothing
    
 End Function
 
@@ -48,7 +118,7 @@ Set db = CurrentDb
    Set WOTemp = New WO
 If pre = "WO" Then
 
-    Set WORs = db.OpenRecordset("SELECT * FROM WO WHERE WOID= " & ID)
+    Set WORs = db.OpenRecordset("SELECT * FROM WO WHERE ID= " & ID)
 
 ElseIf pre = "PMWO" Then
 
@@ -57,10 +127,10 @@ ElseIf pre = "PMWO" Then
 End If
 
 WORs.MoveFirst
-WOTemp.WODescription = WORs!WODescription
+WOTemp.WODescription = Nz(WORs!WODescription, "")
 WOTemp.AssetNumber = WORs!AssetNumber
 'WOTemp.ModelNumber = WORs!ModelNumber
-WOTemp.WOType = WORs!WOType
+'WOTemp.WOType = WORs!WOType
 WOTemp.WORequest = WORs!WORequest
 'WOTemp.AssignedTo = WORs!AssignedTo
 WOTemp.Status = Nz(WORs!Status, "")
@@ -71,7 +141,7 @@ WOTemp.Manufacturer = WORs!Manufacturer
 WOTemp.EngineeringComment = WORs!EngineeringComment
 WOTemp.RequestBy = WORs!RequestBy
 WOTemp.FormatedWONUmber = WORs!formatwonumber
-WOTemp.WOID = WORs!WOID
+'WOTemp.WOID = WORs!WOID
 
 Set Load_WO = WOTemp
 
@@ -93,7 +163,7 @@ Set db = CurrentDb
 
 If pre = "WO" Then
 
-    Set WORs = db.OpenRecordset("SELECT * FROM WO WHERE WOID= " & ID)
+    Set WORs = db.OpenRecordset("SELECT * FROM WO WHERE ID= " & ID)
 
 ElseIf pre = "PMWO" Then
 
@@ -107,7 +177,7 @@ Set WOClosingTemp = New WOClosing
 WORs.MoveFirst
 'WOClosingTemp.Task = WORs!Task
 WOClosingTemp.DateDone = Nz(WORs!DateDone, 0)
-WOClosingTemp.taskComment = Nz(WORs!taskComment, 0)
+WOClosingTemp.TaskComment = Nz(WORs!TaskComment, 0)
 WOClosingTemp.Completed = Nz(WORs!Completed, 0)
 
 
@@ -125,14 +195,15 @@ Dim WORs As Recordset
 
 Set db = CurrentDb
 
-    Set WORs = db.OpenRecordset("SELECT * FROM WO WHERE WOID= " & WOClosing.WOID)
+    Set WORs = db.OpenRecordset("SELECT * FROM WO WHERE ID= " & WOClosing.WOID)
     WORs.MoveFirst
     WORs.Edit
     WORs!DateDone = WOClosing.DateDone
 '    WORs!TimeDone = WOClosing.TimeDone
-    WORs!taskComment = WOClosing.taskComment
+    WORs!TaskComment = WOClosing.TaskComment
 '    WORs!Employee = WOClosing.Employee
     WORs!Completed = WOClosing.Completed
+    If WOClosing.Completed = True Then WORs!closedindb = Now()
     WORs.Update
     
 
@@ -163,7 +234,31 @@ Else
 WONumGen = "WO" & Left(DMax("WONumber", "WO"), 1) + 1
 End If
 
+End Function
 
+Public Function AssetNumberList() As String
 
+Dim db As Database
+Dim Eq As Recordset
+Dim Str As String
+
+Str = "N/A;"
+Set db = CurrentDb
+Set Eq = db.OpenRecordset("SELECT AssetN FROM Equipments WHERE AssetN IS NOT NULL")
+
+If Eq.RecordCount > 0 Then
+
+    Eq.MoveFirst
+    
+    Do While Not Eq.EOF
+        
+        Str = Str & Eq!AssetN & ";"
+        Eq.MoveNext
+        
+    Loop
+End If
+
+AssetNumberList = Str
 
 End Function
+

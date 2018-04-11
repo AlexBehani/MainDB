@@ -9,6 +9,11 @@ Attribute VB_PredeclaredId = True
 Attribute VB_Exposed = False
 Option Compare Database
 
+Private Sub ExitCommand_Click()
+DoCmd.Close acForm, "SettingForm"
+DoCmd.OpenForm "MainMenu"
+End Sub
+
 Private Sub GeneralNote_Click()
 DoCmd.Close acForm, "SettingForm"
 DoCmd.OpenForm "General_Note"

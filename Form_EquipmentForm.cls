@@ -74,8 +74,14 @@ Me.PMList.Requery
 End Sub
 
 Private Sub Save_Click()
+If (Me.StatusCombo = "Spare" And Me.EquipmentTypeCombo = "Instrument") Then
+    Me.AssetNumber.Tag = ""
+    Me.EquipmentN.Tag = ""
+    Me.SystemCombo.Tag = ""
+End If
 
 If (Em_Field) Then Exit Sub
+
 
 Dim arr() As Variant
 Dim i As Integer
@@ -98,18 +104,18 @@ For i = 0 To j - 1
 Next i
 
 
-Equip.EquipmentNumber = Me.EquipmentN
+Equip.EquipmentNumber = Nz(Me.EquipmentN, 0)
 Equip.Description = Me.Description
-Equip.AssetNumber = Me.AssetNumber
+Equip.AssetNumber = Nz(Me.AssetNumber, "")
 Equip.SerialNumber = Me.SerialNumber
 Equip.ModelNumber = Me.ModelNumber
 Equip.DateRegistered = Me.DateReqistered
 Equip.EquipmentType = Me.EquipmentTypeCombo
 Equip.Manufacturer = Me.Manufacturer
-Equip.System = Me.SystemCombo
+Equip.System = Nz(Me.SystemCombo, "")
 Equip.Status = Me.StatusCombo
 
-If Equip.Status = "In-Service" Then
+If Equip.Status = "In-Service" Or (Equip.Status = "Spare" And Equip.EquipmentType = "Instrument") Then
     Call Save_GenPM(arr())
 End If
 Call Save_Eq
@@ -123,7 +129,7 @@ End Sub
 
 
 Private Sub StatusCombo_AfterUpdate()
-If Me.StatusCombo = "Out-Of-Service" Or Me.StatusCombo = "Spare" Then
+If Me.StatusCombo = "Out-Of-Service" Then
     MsgBox "Database will not generate PM for " & Me.StatusCombo & " status", vbCritical, "Please note"
 End If
 End Sub

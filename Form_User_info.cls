@@ -9,6 +9,10 @@ Attribute VB_PredeclaredId = True
 Attribute VB_Exposed = False
 Option Compare Database
 
+Private Sub Command19_Click()
+
+End Sub
+
 Private Sub Command6_Click()
 On Error GoTo handle_err
 DoCmd.Beep
@@ -55,6 +59,11 @@ handle_err:
 MsgBox Err.Description
 End Sub
 
+Private Sub ExitCommand_Click()
+DoCmd.Close acForm, "User_info"
+DoCmd.OpenForm "User_Administration"
+End Sub
+
 Private Sub Form_Close()
 If Not (SUser Is Nothing) Then Set SUser = Nothing
 End Sub
@@ -64,8 +73,8 @@ On Error GoTo Err
 'Dim FrmAccss As Integer
 'FrmAccss = 1
 'Call Access_Check(FrmAccss, Form.Name)
-Me.FName = SUser.FName
-Me.LName = SUser.LName
+Me.Fname = SUser.Fname
+Me.Lname = SUser.Lname
 Exit Sub
 Err:
 Resume Next
@@ -76,12 +85,12 @@ Private Sub SaveButton_Click()
 'Dim FName As String
 'Dim LName As String
 'Dim Accss_level As Integer
-If Nz(Me.FName, "") = "" Then
+If Nz(Me.Fname, "") = "" Then
 
     MsgBox "The First Name box is empty!", vbCritical, "First Name"
     Exit Sub
 End If
-If Nz(Me.LName, "") = "" Then
+If Nz(Me.Lname, "") = "" Then
 
     MsgBox "The Last Name box is empty!", vbCritical, "Last Name"
     Exit Sub
@@ -99,7 +108,7 @@ End If
     Exit Sub
     Else:
 
-    Call Change_User_info(Me.FName, Me.LName, SUser.UserID)
+    Call Change_User_info(Me.Fname, Me.Lname, SUser.UserID)
     
     End If
 'MsgBox "It has changed to:" & vbCrLf & vbCrLf & UFnme & " " & _

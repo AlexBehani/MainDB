@@ -11,7 +11,7 @@ Option Compare Database
 
 Private Sub WOID_Click()
     Set WO = New WO
-    Set WO = Load_WO(Me.WOID)
+    Set WO = Load_WO("WO", Me.WOID)
     
     Forms!WorkOrder.WODescription = WO.WODescription
     Forms!WorkOrder.EquipN = WO.ModelNumber

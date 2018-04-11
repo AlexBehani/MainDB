@@ -130,7 +130,7 @@ Public Sub Delete_Eq()
 End Sub
 
 
-Public Sub Save_GenPM(Arr As Variant)
+Public Sub Save_GenPM(arr As Variant)
 
 Dim db As Database
 Dim Eq As Recordset
@@ -145,20 +145,20 @@ Set GenPM = db.OpenRecordset("GeneralPM")
 
 'If Not (Equip.Edit) Then
 
-For n = LBound(Arr) To UBound(Arr) - 1
+For n = LBound(arr) To UBound(arr) - 1
     
-    Set PMList = db.OpenRecordset("SELECT * FROM PMTask WHERE PMID=" & Arr(n))
+    Set PMList = db.OpenRecordset("SELECT * FROM PMTask WHERE PMID=" & arr(n))
     GenPM.AddNew
     GenPM!DateRegistered = Equip.DateRegistered
     GenPM!AssetNumber = Equip.AssetNumber
     GenPM!ModelNumber = Equip.ModelNumber
     GenPM!SerialNumber = Equip.SerialNumber
 '    GenPM!Location = Equip.Location
-    GenPM!PMID = Arr(n)
-    GenPM!TaskName = PMList!Task_Name
+    GenPM!PMID = arr(n)
+'    GenPM!TaskName = PMList!Task_Name
     GenPM!Description = PMList!Description
 
-    GenPM!TaskType = PMList!Type
+'    GenPM!TaskType = PMList!Type
     GenPM!AssignedTo = PMList!AssignedTo
 '    GenPM!DownTime = PMList!DownTime
     GenPM!frequency = PMList!frequency

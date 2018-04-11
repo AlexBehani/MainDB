@@ -74,7 +74,7 @@ For m = 1 To n
 
 Next
 
-
+Me.PMWOCombo = ""
 Exit Sub
 Err:
 If (Err.Number = 13) Then
@@ -88,7 +88,7 @@ Private Sub PMWOCommand_Click()
 
 On Error GoTo Err
 
-DoCmd.OutputTo acOutputTable, "PMWO", acFormatXLSX
+DoCmd.OutputTo acOutputQuery, "OpenWorkOrder", acFormatXLSX
 
 Exit Sub
 Err:
@@ -135,7 +135,7 @@ For m = 1 To n
     DoCmd.OpenReport "WOReport", acViewNormal, , "[woid]=" & Me.WOCombo.Column(4)
 
 Next
-
+Me.WOCombo = ""
 
 Exit Sub
 Err:
@@ -149,7 +149,7 @@ End Sub
 Private Sub WOCommand_Click()
 On Error GoTo Err
 
-DoCmd.OutputTo acOutputTable, "WO", acFormatXLSX
+DoCmd.OutputTo acOutputQuery, "ClosedWorkOrder", acFormatXLSX
 
 Exit Sub
 Err:

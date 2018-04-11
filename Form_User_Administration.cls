@@ -40,21 +40,21 @@ End Sub
 
 Private Sub Command9_Click()
 'On Error GoTo handle_err
-Dim FName As String
-Dim LName As String
+Dim Fname As String
+Dim Lname As String
 'Dim Acss_level As Integer
 
 If Nz(Me.fn_txt, "") = "" Then
     MsgBox "Please type a first name", vbCritical, "ERROR"
     Exit Sub
 Else:
-    FName = Me.fn_txt
+    Fname = Me.fn_txt
 End If
 If Nz(Me.lname_txt, "") = "" Then
     MsgBox "Please type a last name", vbCritical, "ERROR"
     Exit Sub
 Else:
-    LName = Me.lname_txt
+    Lname = Me.lname_txt
 End If
 'If Nz(Me.Access_level, "") = "" Then
 '    MsgBox "Please select an Access Level", vbCritical, "ERROR"
@@ -62,7 +62,7 @@ End If
 'Else:
 '    Acss_level = Me.Access_level
 'End If
-    Call Register_User(FName, LName)
+    Call Register_User(Fname, Lname)
     List2.Requery
     Me.fn_txt = ""
     Me.lname_txt = ""
@@ -88,8 +88,8 @@ If Nz(Me.List2, "") = "" Then
 End If
 
 SUser.UserID = Me.List2.Column(2)
-SUser.FName = Me.List2.Column(0)
-SUser.LName = Me.List2.Column(1)
+SUser.Fname = Me.List2.Column(0)
+SUser.Lname = Me.List2.Column(1)
 
 
 DoCmd.Close acForm, "User_Administration"

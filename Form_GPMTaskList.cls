@@ -31,7 +31,7 @@ On Error GoTo Err
   If (MsgBox("If you press Yes, you will update Date Registerd from " & vbNewLine & Me.GPMList.Column(0) & _
   " to " & WOClosing.DateDone & vbNewLine & vbNewLine & "Are you sure?", vbQuestion + vbYesNo, "") = vbYes) Then
 
-        Call UPdate_DateRegister(Me.GPMList.Column(5), WOClosing.DateDone)
+        Call UPdate_DateRegister(Me.GPMList.Column(7), WOClosing.DateDone)
         
         
   End If

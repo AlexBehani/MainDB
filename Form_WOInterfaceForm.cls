@@ -9,6 +9,11 @@ Attribute VB_PredeclaredId = True
 Attribute VB_Exposed = False
 Option Compare Database
 
+Private Sub ExitCommand_Click()
+DoCmd.Close acForm, "WOInterfaceForm"
+DoCmd.OpenForm "MainMenu"
+End Sub
+
 Private Sub FilterCombo_AfterUpdate()
 Me.PMWorkOrderCombo.RowSource = PMWORowlist("PMWO", Me.FilterCombo)
 End Sub
@@ -43,4 +48,11 @@ End Sub
 
 Private Sub PMWorkOrderCombo_Change()
 'MsgBox "hello"
+End Sub
+
+Private Sub WOCombo_AfterUpdate()
+Set WO = Load_WO("WO", Me.WOCombo.Column(1))
+WO.WOID = Me.WOCombo.Column(1)
+DoCmd.Close acForm, "WOInterfaceForm"
+DoCmd.OpenForm "WorkOrderEditForm"
 End Sub

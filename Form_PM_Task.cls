@@ -26,19 +26,25 @@ Me.PMTask_subform.Requery
 End Sub
 
 Private Sub Form_Load()
-Set PMTK = New PMtask
+Set PMTK = New PMTask
 PMTK.Edit = False
 End Sub
 
 Private Sub SaveCommand_Click()
 
 If (Em_Field) Then Exit Sub
-PMTK.PMTaskName = Me.TaskName
-PMTK.PMType = Me.TaskType
+
+If CheckForComma(Me.Description) Then
+MsgBox "Please remove all Commas, before press save", vbCritical, "Error"
+Exit Sub
+End If
+
+'PMTK.PMTaskName = Me.TaskName
+'PMTK.PMType = Me.TaskType
 PMTK.AssignedTo = Me.AssignedTo
 PMTK.Description = Me.Description
 PMTK.FrequencyDays = Me.FrequencyDays
-PMTK.DownTime = Me.DownTime
+
 
 Call PMTask_Save
 PMTK.Edit = False

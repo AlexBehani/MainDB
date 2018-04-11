@@ -12,8 +12,8 @@ Set db = CurrentDb
 If (PMTK.Edit = False) Then
     Set PM = db.OpenRecordset("PMTask")
     PM.AddNew
-    PM!Task_Name = PMTK.PMTaskName
-    PM!Type = PMTK.PMType
+'    PM!Task_Name = PMTK.PMTaskName
+'    PM!Type = PMTK.PMType
     PM!Description = PMTK.Description
     PM!AssignedTo = PMTK.AssignedTo
 '    PM!DownTime = PMTK.DownTime
@@ -26,8 +26,8 @@ ElseIf (PMTK.Edit = True) Then
     
     PM.MoveFirst
     PM.Edit
-    PM!Task_Name = PMTK.PMTaskName
-    PM!Type = PMTK.PMType
+'    PM!Task_Name = PMTK.PMTaskName
+'    PM!Type = PMTK.PMType
     PM!Description = PMTK.Description
     PM!AssignedTo = PMTK.AssignedTo
     PM!frequency = PMTK.FrequencyDays
@@ -62,8 +62,8 @@ Set db = CurrentDb
 Set PMTK = db.OpenRecordset("SELECT * FROM PMTask WHERE PMID= " & ID)
 PMTK.MoveFirst
 
-PMTaskTemp.PMTaskName = PMTK!Task_Name
-PMTaskTemp.PMType = PMTK!Type
+'PMTaskTemp.PMTaskName = PMTK!Task_Name
+'PMTaskTemp.PMType = PMTK!Type
 PMTaskTemp.AssignedTo = PMTK!AssignedTo
 PMTaskTemp.Description = PMTK!Description
 PMTaskTemp.FrequencyDays = PMTK!frequency

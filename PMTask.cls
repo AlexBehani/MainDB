@@ -9,8 +9,8 @@ Attribute VB_PredeclaredId = False
 Attribute VB_Exposed = False
 Option Compare Database
 
-Public PMTaskName As String
-Public PMType As String
+'Public PMTaskName As String
+'Public PMType As String
 Public Description As String
 Public AssignedTo As String
 Public FrequencyDays As String

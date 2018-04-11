@@ -84,7 +84,7 @@ If Filter = "New" Then
 
     Do While Not PMWO.EOF
 
-        Str = Str & PMWO!FormatWONumber & ";" & PMWO!WOID & ";"
+        Str = Str & PMWO!formatwonumber & ";" & PMWO!WOID & ";"
         PMWO.MoveNext
     Loop
 
@@ -101,7 +101,7 @@ ElseIf Filter = "Existed ones" Then
 
     Do While Not PMWO.EOF
 
-        Str = Str & PMWO!FormatWONumber & ";" & PMWO!WOID & ";"
+        Str = Str & PMWO!formatwonumber & ";" & PMWO!WOID & ";"
         PMWO.MoveNext
     Loop
     
@@ -117,7 +117,7 @@ Else
 
     Do While Not PMWO.EOF
 
-        Str = Str & PMWO!FormatWONumber & ";" & PMWO!WOID & ";"
+        Str = Str & PMWO!formatwonumber & ";" & PMWO!WOID & ";"
         PMWO.MoveNext
     Loop
 

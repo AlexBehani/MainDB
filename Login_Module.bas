@@ -7,7 +7,8 @@ Public WO As WO
 Public WOClosing As WOClosing
 Public GNote As GeneralNote
 Public Equip As Equipments
-Public PMTK As PMtask
+Public PMTK As PMTask
+Public PMWO As PMWO
 
 
 ' login=0 User & Password correct, also no need to update
@@ -20,24 +21,26 @@ Public Function Login(UserName As String, Pass As String) As Integer
 Dim db As dao.Database
 Dim Rs As dao.Recordset
 Dim txt As String
+Dim PassTxt As String
 
 
 Set db = CurrentDb
 
-Set Rs = db.OpenRecordset("SELECT * FROM Users WHERE UserName='" & UserName & "' AND Password='" & BASE64SHA1(Pass) & "'")
+PassTxt = BASE64SHA1(Pass)
+Set Rs = db.OpenRecordset("SELECT * FROM Users WHERE UserName='" & UserName & "' AND Password='" & PassTxt & "'")
 
 If (Rs.RecordCount > 0) Then
 
-        If (Rs!PWDRst = 0) Then
+        If (Rs!pwdrst = 0) Then
         
             Login = 0
-        ElseIf (Rs!PWDRst = -1) Then
+        ElseIf (Rs!pwdrst = -1) Then
             Login = 1
         End If
     Set CUser = New CurrentUser
-    CUser.User = Nz(Rs!FName, "") & " " & Nz(Rs!LName, "")
-    CUser.FName = Nz(Rs!FName, "")
-    CUser.LName = Nz(Rs!LName, "")
+    CUser.User = Nz(Rs!Fname, "") & " " & Nz(Rs!Lname, "")
+    CUser.Fname = Nz(Rs!Fname, "")
+    CUser.Lname = Nz(Rs!Lname, "")
     
 Else
 Login = 2
@@ -51,7 +54,7 @@ Set db = Nothing
 End Function
 
 
-Public Sub Register_User(FName As String, LName As String, Optional var3 As Integer)
+Public Sub Register_User(Fname As String, Lname As String, Optional var3 As Integer)
 Dim db As Database
 
 Dim PWR As String
@@ -59,7 +62,7 @@ Dim Rs As Recordset
 
 PWR = "-1"
 Set db = CurrentDb
-Set Rs = db.OpenRecordset("SELECT * FROM Users WHERE FName = '" & FName & "' AND LName = '" & LName & "'")
+Set Rs = db.OpenRecordset("SELECT * FROM Users WHERE FName = '" & Fname & "' AND LName = '" & Lname & "'")
 
 If Rs.RecordCount > 0 Then
     
@@ -72,10 +75,11 @@ End If
 Set Rs = db.OpenRecordset("Users")
     
     Rs.AddNew
-    Rs!FName = FName
-    Rs!LName = LName
-    Rs!Password = BASE64SHA1("welcome1")
-    Rs!PWDRst = -1
+    Rs!Fname = Fname
+    Rs!Lname = Lname
+    Rs!Password = BASE64SHA1("welcome")
+    Rs!pwdrst = -1
+    Rs!UserName = Fname & Lname
     Rs.Update
     
 MsgBox "New User is added", vbInformation, "Done"
@@ -85,7 +89,7 @@ Set db = Nothing
 End Sub
 
 
-Public Function Change_User_info(FName As String, LName As String, UserID As Integer)
+Public Function Change_User_info(Fname As String, Lname As String, UserID As Integer)
 On Error GoTo Err
 Dim db As Database
 Dim User As Recordset
@@ -94,8 +98,8 @@ Set db = CurrentDb
 Set User = db.OpenRecordset("SELECT * FROM Users WHERE UserID = " & UserID)
 User.MoveFirst
 User.Edit
-User!FName = FName
-User!LName = LName
+User!Fname = Fname
+User!Lname = Lname
 User.Update
 
 
@@ -121,6 +125,7 @@ Set User = db.OpenRecordset("SELECT * FROM Users WHERE UserID = " & UserID)
 User.MoveFirst
 User.Edit
 User!Password = BASE64SHA1("welcome")
+User!pwdrst = -1
 User.Update
 
 Set db = Nothing
@@ -152,12 +157,12 @@ Dim db As Database
 Dim User As Recordset
 
 Set db = CurrentDb
-Set User = db.OpenRecordset("SELECT * FROM Users WHERE FName = '" & CUser.FName & "' AND LName = '" & CUser.LName & "'")
+Set User = db.OpenRecordset("SELECT * FROM Users WHERE FName = '" & CUser.Fname & "' AND LName = '" & CUser.Lname & "'")
 
 User.MoveFirst
 User.Edit
 User!Password = BASE64SHA1(Pass)
-User!PWDRst = 0
+User!pwdrst = False
 User.Update
 
 Set db = Nothing
