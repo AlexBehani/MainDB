@@ -21,7 +21,7 @@ Public SerialNumber As String
 Public PM As String
 'Public Saftey As String
 Public DateRegistered As Date
-Public ID As Integer
+Public ID As Long
 Public Edit As Boolean
 'Public GNoteID As Integer
 Public EquipmentType As String

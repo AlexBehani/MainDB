@@ -27,6 +27,7 @@ WORs!Manufacturer = WO.Manufacturer
 WORs!EngineeringComment = WO.EngineeringComment
 WORs!RequestBy = WO.RequestBy
 WORs!formatwonumber = WO.FormatedWONUmber
+WORs!qrrequired = WO.QRR
 'WO.WOID = WORs!WOID
 WORs.Update
 
@@ -76,7 +77,7 @@ Set db = CurrentDb
 Set WOR = db.OpenRecordset("SELECT WODescription, ModelNumber, WORequest, " & _
                             "AssignedTo, Status, Completed, RequestedDate, " & _
                             "DueDate, WONumber, AssetNumber, Manufacturer, " & _
-                            "EngineeringComment, RequestBy, formatwonumber FROM WO WHERE ID =" & ID)
+                            "EngineeringComment, RequestBy, formatwonumber, QRrequired FROM WO WHERE ID =" & ID)
 
 
 
@@ -97,6 +98,7 @@ WOR!Manufacturer = WO.Manufacturer
 WOR!EngineeringComment = WO.EngineeringComment
 WOR!RequestBy = WO.RequestBy
 WOR!formatwonumber = WO.FormatedWONUmber
+WOR!qrrequired = WO.QRR
 'WO.WOID = WOR!WOID
 WOR.Update
 
@@ -141,6 +143,8 @@ WOTemp.Manufacturer = WORs!Manufacturer
 WOTemp.EngineeringComment = WORs!EngineeringComment
 WOTemp.RequestBy = WORs!RequestBy
 WOTemp.FormatedWONUmber = WORs!formatwonumber
+
+If pre = "WO" Then WOTemp.QRR = WORs!qrrequired
 'WOTemp.WOID = WORs!WOID
 
 Set Load_WO = WOTemp
@@ -233,6 +237,8 @@ Else
 
 WONumGen = "WO" & Left(DMax("WONumber", "WO"), 1) + 1
 End If
+Set WORec = Nothing
+Set db = Nothing
 
 End Function
 
@@ -257,8 +263,28 @@ If Eq.RecordCount > 0 Then
         
     Loop
 End If
-
+Set Eq = Nothing
+Set db = Nothing
 AssetNumberList = Str
+
+End Function
+
+Public Function AssetAssociatedData(Asset As String) As String
+Dim db As Database
+Dim Eq As Recordset
+Dim Str As String
+
+Set db = CurrentDb
+Set Eq = db.OpenRecordset("SELECT Manufacturer, Status FROM Equipments WHERE AssetN = '" & Asset & "'")
+
+If Eq.RecordCount > 0 Then
+    Eq.MoveFirst
+    Str = Eq!Manufacturer & ";" & Eq!Status
+End If
+
+Set Eq = Nothing
+Set db = Nothing
+AssetAssociatedData = Str
 
 End Function
 

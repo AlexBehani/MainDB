@@ -41,6 +41,8 @@ If (Rs.RecordCount > 0) Then
     CUser.User = Nz(Rs!Fname, "") & " " & Nz(Rs!Lname, "")
     CUser.Fname = Nz(Rs!Fname, "")
     CUser.Lname = Nz(Rs!Lname, "")
+    CUser.AccessLevel = Nz(Rs!AccessLevel, 0)
+    
     
 Else
 Login = 2
@@ -54,7 +56,7 @@ Set db = Nothing
 End Function
 
 
-Public Sub Register_User(Fname As String, Lname As String, Optional var3 As Integer)
+Public Sub Register_User(Fname As String, Lname As String, var3 As Integer)
 Dim db As Database
 
 Dim PWR As String
@@ -80,6 +82,7 @@ Set Rs = db.OpenRecordset("Users")
     Rs!Password = BASE64SHA1("welcome")
     Rs!pwdrst = -1
     Rs!UserName = Fname & Lname
+    Rs!AccessLevel = var3
     Rs.Update
     
 MsgBox "New User is added", vbInformation, "Done"
@@ -89,17 +92,19 @@ Set db = Nothing
 End Sub
 
 
-Public Function Change_User_info(Fname As String, Lname As String, UserID As Integer)
+Public Function Change_User_info(Fname As String, Lname As String, UserID As Integer, AccessLevel As Integer)
 On Error GoTo Err
 Dim db As Database
 Dim User As Recordset
 
 Set db = CurrentDb
-Set User = db.OpenRecordset("SELECT * FROM Users WHERE UserID = " & UserID)
+Set User = db.OpenRecordset("SELECT FName, LName, AccessLevel, UserName FROM Users WHERE UserID = " & UserID)
 User.MoveFirst
 User.Edit
 User!Fname = Fname
 User!Lname = Lname
+User!AccessLevel = AccessLevel
+User!UserName = Fname & Lname
 User.Update
 
 

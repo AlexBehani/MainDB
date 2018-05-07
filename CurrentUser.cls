@@ -12,6 +12,7 @@ Option Compare Database
 Private CurrentUser As String
 Public Fname As String
 Public Lname As String
+Public AccessLevel As Integer
 
 
 Property Let User(value As String)

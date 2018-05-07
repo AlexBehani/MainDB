@@ -28,5 +28,6 @@ Public Manufacturer As String
 Public EngineeringComment As String
 Public RequestBy As String
 Public RequestedDate As Date
+Public QRR As Boolean
 
 

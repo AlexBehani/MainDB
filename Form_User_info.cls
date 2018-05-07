@@ -75,6 +75,7 @@ On Error GoTo Err
 'Call Access_Check(FrmAccss, Form.Name)
 Me.Fname = SUser.Fname
 Me.Lname = SUser.Lname
+Me.A_level = SUser.AccessLevel
 Exit Sub
 Err:
 Resume Next
@@ -84,7 +85,7 @@ Private Sub SaveButton_Click()
 'On Error GoTo handle_err
 'Dim FName As String
 'Dim LName As String
-'Dim Accss_level As Integer
+Dim Accss_level As Integer
 If Nz(Me.Fname, "") = "" Then
 
     MsgBox "The First Name box is empty!", vbCritical, "First Name"
@@ -96,19 +97,21 @@ If Nz(Me.Lname, "") = "" Then
     Exit Sub
 End If
 
-'If Nz(Me.A_level, "") = "" Then
-'    MsgBox "The Access Level combo is empty!", vbCritical, "Last Name"
-'    Exit Sub
-'End If
-'FName = Me.FName
-'LName = Me.LName
-'Accss_level = Me.A_level
+If Nz(Me.A_level, "") = "" Then
+    MsgBox "The Access Level combo is empty!", vbCritical, "Last Name"
+    Exit Sub
+End If
 
-    If (MsgBox("You are about to change " & SUser.GetFullName & "'s information!" & vbCrLf & vbCrLf & "Are you sure?", vbYesNo, "Warning")) = vbNo Then
+SUser.Fname = Me.Fname
+SUser.Lname = Me.Lname
+SUser.AccessLevel = Me.A_level
+
+
+    If (MsgBox("You are about to change " & SUser.GetFullName() & "'s information!" & vbCrLf & vbCrLf & "Are you sure?", vbYesNo, "Warning")) = vbNo Then
     Exit Sub
     Else:
 
-    Call Change_User_info(Me.Fname, Me.Lname, SUser.UserID)
+    Call Change_User_info(Me.Fname, Me.Lname, SUser.UserID, SUser.AccessLevel)
     
     End If
 'MsgBox "It has changed to:" & vbCrLf & vbCrLf & UFnme & " " & _

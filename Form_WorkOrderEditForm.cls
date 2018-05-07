@@ -11,6 +11,19 @@ Option Compare Database
 
 
 
+Private Sub AssetNumber_AfterUpdate()
+Dim Str As String
+
+Str = AssetAssociatedData(Me.AssetNumber)
+If Len(Str) > 0 Then
+    Me.Manufacturer = Left(Str, InStrRev(Str, ";") - 1)
+    Me.Status = Right(Str, Len(Str) - InStrRev(Str, ";"))
+Else
+    Me.Manufacturer = Null
+    Me.Status = Null
+End If
+End Sub
+
 'Private Sub CancelCommand_Click()
 'If Not (PMWO Is Nothing) Then Set PMWO = Nothing
 'DoCmd.Close acForm, "PMWorkOrderForm"
@@ -76,7 +89,7 @@ End Sub
 
 Private Sub Form_Load()
 If CredentialsCheck Then
-'Me.RequestedBy = CUser.FullName
+Me.RequestedBy = CUser.FullName
 End If
 Me.WONumber = WO.FormatedWONUmber
 Me.AssetNumber = WO.AssetNumber
@@ -94,6 +107,7 @@ Else
     Me.Description = WO.WODescription
 End If
 Me.AssetNumber.RowSource = AssetNumberList
+Me.QRRCheck = WO.QRR
 
 
 End Sub
@@ -112,11 +126,16 @@ WO.Status = Me.Status
 WO.WORequest = Me.RequestedWork
 WO.EngineeringComment = Me.Comment
 WO.WODescription = Me.Description
+WO.QRR = Me.QRRCheck
 
 
 
 Update_WO (WO.WOID)
+If Not (Me.QRRCheck) Then
 DoCmd.OpenReport "WOReport", acViewNormal, , "[id]=" & WO.WOID
+Else
+DoCmd.OpenReport "WOReport1", acViewNormal, , "[id]=" & WO.WOID
+End If
 'Clear_Field
 
 

@@ -23,7 +23,7 @@ End Sub
 
 Private Sub Equipment_Click()
 DoCmd.Close acForm, "MainMenu"
-DoCmd.OpenForm "EquipmentForm"
+DoCmd.OpenForm "EquipmentInterface"
 End Sub
 
 Private Sub ExitCommand_Click()
@@ -32,17 +32,29 @@ End Sub
 
 Private Sub Form_Load()
 If Not (CUser Is Nothing) Then
-Me.IDLabel.Caption = CUser.FullName
-Me.IDLabel.ForeColor = RGB(82, 188, 236)
-
-Me.UserIcon.Visible = True
-Me.anonymous.Visible = False
+    Me.IDLabel.Caption = CUser.FullName
+    Me.IDLabel.ForeColor = RGB(82, 188, 236)
+    
+    Me.UserIcon.Visible = True
+    Me.anonymous.Visible = False
 Else
-Me.IDLabel.Caption = "anonymous"
-Me.UserIcon.Visible = False
-Me.anonymous.Visible = True
-Me.IDLabel.ForeColor = RGB(82, 188, 236)
+    Me.IDLabel.Caption = "anonymous"
+    Me.UserIcon.Visible = False
+    Me.anonymous.Visible = True
+    Me.IDLabel.ForeColor = RGB(82, 188, 236)
+    
+    Me.Administration.Enabled = False
+    Me.ClosingWO.Enabled = False
+    Me.Equipment.Enabled = False
+    Exit Sub
 
+End If
+
+If (CUser.AccessLevel > 1) Then
+    Me.Administration.Enabled = False
+    Me.ClosingWO.Enabled = False
+    Me.Equipment.Enabled = False
+    Exit Sub
 End If
 End Sub
 

@@ -2,7 +2,7 @@ VERSION 1.0 CLASS
 BEGIN
   MultiUse = -1  'True
 END
-Attribute VB_Name = "Form_EquipmentForm"
+Attribute VB_Name = "Form_EquipmentEdit"
 Attribute VB_GlobalNameSpace = False
 Attribute VB_Creatable = True
 Attribute VB_PredeclaredId = True
@@ -12,7 +12,7 @@ Option Compare Database
 Private Sub Cancel_Click()
 
 If Not (Equip Is Nothing) Then Set Equip = Nothing
-DoCmd.Close acForm, "EquipmentForm"
+DoCmd.Close acForm, "EquipmentEdit"
 DoCmd.OpenForm "MainMenu"
 
 End Sub
@@ -32,8 +32,30 @@ End Sub
 
 
 Private Sub Form_Load()
-Set Equip = New Equipments
-Equip.Edit = False
+Dim Row As Variant
+Dim i As Integer
+Dim j As Integer
+
+Me.AssetNumber = Equip.AssetNumber
+Me.Description = Equip.Description
+Me.EquipmentN = Equip.EquipmentNumber
+Me.EquipmentTypeCombo = Equip.EquipmentType
+Me.SerialNumber = Equip.SerialNumber
+Me.ModelNumber = Equip.ModelNumber
+Me.Manufacturer = Equip.Manufacturer
+Me.StatusCombo = Equip.Status
+Me.SystemCombo = Equip.System
+Me.DateReqistered = Equip.DateRegistered
+Row = PMListRow(Equip.ID)
+
+i = UBound(Row)
+
+For j = 0 To i - 1
+
+    Me.PMList.AddItem (Row(j, 0) & ";" & Row(j, 1) & ";" & Row(j, 2) & ";" & Row(j, 3))
+
+Next j
+
 
 End Sub
 
@@ -96,8 +118,7 @@ If Not (j > 0) Then
 MsgBox "Please select PM", vbCritical, ""
 Exit Sub
 End If
-'i = Me.PMList.ListCount
-'ReDim test(1 To i)
+
 ReDim Arr(j)
 
 For i = 0 To j - 1
@@ -119,10 +140,11 @@ Equip.System = Nz(Me.SystemCombo, "")
 Equip.Status = Me.StatusCombo
 
 
-RowNumber = Save_Eq
+Update_Eq (Equip.ID)
+DeleteGenPM (Equip.ID)
 
 If Equip.Status = "In-Service" Or (Equip.Status = "Spare" And Equip.EquipmentType = "Instrument") Then
-    Call Save_GenPM(Arr(), RowNumber)
+    Call Save_GenPM(Arr(), Equip.ID)
 End If
 
 'Call Clear_Field
@@ -130,7 +152,7 @@ End If
 'Me.Equipments_subform.Requery
 
 DoCmd.OpenForm "MainMenu"
-DoCmd.Close acForm, "EquipmentForm"
+DoCmd.Close acForm, "EquipmentEdit"
 
 
 

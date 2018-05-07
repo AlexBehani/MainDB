@@ -13,6 +13,7 @@ Public Fname As String
 Public Lname As String
 Public FullName As String
 Public UserID As Integer
+Public AccessLevel As Integer
 
 
 

@@ -21,6 +21,13 @@ End Sub
 Private Sub Form_Load()
 Me.PMWorkOrderCombo.RowSource = PMWORowlist("PMWO")
 
+If (CUser Is Nothing) Then
+    Me.GenerateWO.Enabled = False
+
+ElseIf (CUser.AccessLevel > 1) Then
+    Me.GenerateWO.Enabled = False
+End If
+
 End Sub
 
 Private Sub GenerateWO_Click()
