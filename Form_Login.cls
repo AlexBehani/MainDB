@@ -117,3 +117,47 @@ Change_Err:
 End Function
 
 
+Private Sub Form_Load()
+On Error GoTo handle_err
+Dim Ver As String
+Ver = GetVersion
+If Ver = "Error" Then
+GoTo handle_err
+End If
+
+If Ver <> Me.Version Then
+    MsgBox "This is an outdated version of Maint. Database!" & vbNewLine & vbNewLine & _
+    "Please contact Admin to obtain the current version", vbExclamation, "Expired Version!"
+    DoCmd.Quit
+End If
+
+Exit Sub
+handle_err:
+MsgBox "Connection attempt has failed due to network issue" & vbNewLine & vbNewLine & "Please try it again later", vbCritical, "Network Error!"
+'DoCmd.Quit
+End Sub
+
+Private Function GetVersion() As String
+On Error GoTo Err_Handel
+Dim db As Database
+Dim Ver As Recordset
+Dim Cur As String
+
+Cur = "Current"
+Set db = CurrentDb
+
+Set Ver = db.OpenRecordset("SELECT VersionN FROM Versions WHERE cmnt='" & Cur & "'")
+If Ver.RecordCount > 0 Then
+    Ver.MoveFirst
+    GetVersion = Ver!VersionN
+Else
+    GoTo Err_Handel
+End If
+
+Exit Function
+
+Err_Handel:
+GetVersion = "Error"
+
+
+End Function

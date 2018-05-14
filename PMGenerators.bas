@@ -34,8 +34,33 @@ Ydate = Year(GenPM!DateRegistered)
 
 
     If Not (YCr = Ydate And MCr = Mdate) Then
+    
+        If GenPM!Frequency = "Monthly" Then
+                    
+                    PMWO.AddNew
+'                    PMWO!WODescription = GenPM!Description
+                    PMWO!ModelNumber = GenPM!ModelNumber
+                    PMWO!AssetNumber = GenPM!AssetNumber
+'                    PMWO!WOType = GenPM!TaskType
+                    PMWO!WORequest = GenPM!Description
+                    PMWO!RequestBy = "PM"
+                    PMWO!AssignedTo = GenPM!AssignedTo
+                    PMWO!Completed = False
+'                    PMWO!Task = GenPM!TaskName
+                    PMWO!Status = GenPM!Status
+                    PMWO!DueDate = DueDate(GenPM!DateRegistered)
+                    PMWO!Manufacturer = GenPM!Manufacturer
+'                    PMWO!WONumber = AvailNo
+'                    PMWO!formatwonumber = PMWOFormatNo("PMWO", AvailNo)
+                    PMWO!gpmid = GenPM!ID
+                    PMWO!DateRegistered = GenPM!DateRegistered
+                    PMWO.Update
+'                    AvailNo = AvailNo + 1
+                    i = i + 1
+                    
+        End If
         
-        If GenPM!frequency = "Bi Annaully" Then
+        If GenPM!Frequency = "Bi Annaully" Then
             If (Ydate <> YCr And Mdate = MCr And YCr > Ydate) Then
                 If ((YCr - Ydate) Mod 2) = 0 Then
                     
@@ -63,7 +88,7 @@ Ydate = Year(GenPM!DateRegistered)
                 End If
             End If
             
-        ElseIf GenPM!frequency = "Annually" Then
+        ElseIf GenPM!Frequency = "Annually" Then
             If (Ydate <> YCr And Mdate = MCr) Then
                     
                     PMWO.AddNew
@@ -88,9 +113,9 @@ Ydate = Year(GenPM!DateRegistered)
                     i = i + 1
             End If
             
-        ElseIf GenPM!frequency = "Semi Annually" Then
+        ElseIf GenPM!Frequency = "Semi Annually" Then
             If (Ydate = YCr And Mdate <> MCr And MCr > Mdate) Then
-                If ((MCr - Mdate) Mod 6) Then
+                If ((MCr - Mdate) Mod 6) = 0 Then
                     
                     PMWO.AddNew
 '                    PMWO!WODescription = GenPM!Description
@@ -161,7 +186,7 @@ Ydate = Year(GenPM!DateRegistered)
                     i = i + 1
             End If
             
-        ElseIf GenPM!frequency = "Quarterly" Then
+        ElseIf GenPM!Frequency = "Quarterly" Then
             If (Ydate = YCr And Mdate <> MCr And MCr > Mdate) Then
                 If ((MCr - Mdate) Mod 3) = 0 Then
                     
@@ -276,11 +301,11 @@ Public Sub DeleteOldPM()
 On Error GoTo Err
 Dim db As Database
 'Dim GPM As Recordset
-Dim Str As String
+Dim str As String
 Set db = CurrentDb
-Str = "DELETE * FROM TempStorePMWO"
+str = "DELETE * FROM TempStorePMWO"
 
-db.Execute Str
+db.Execute str
 
 'Set GPM = db.OpenRecordset("DELETE FROM TempStorePMWO WHERE month(DueDate) =" & Month(Date) & " AND Year(DueDate)=" & Year(Date))
 
@@ -351,16 +376,16 @@ Set PMAudit = db.OpenRecordset("PMAudit")
     PMAudit!DateRegistered = GPM!DateRegistered
     PMAudit!UpdatedDateRegistered = DateReg
     PMAudit!ModelNumber = GPM!ModelNumber
-    PMAudit!AssetNumber = GPM!SerialNumber
+    PMAudit!AssetNumber = GPM!AssetNumber
     PMAudit!PMID = GPM!PMID
 '    PMAudit!TaskName = GPM!TaskName
 '    PMAudit!TaskType = GPM!TaskType
     PMAudit!Description = GPM!Description
     PMAudit!AssignedTo = GPM!AssignedTo
-    PMAudit!frequency = GPM!frequency
+    PMAudit!Frequency = GPM!Frequency
     PMAudit!Status = GPM!Status
     PMAudit!Manufacturer = GPM!Manufacturer
-    PMAudit!modified = GPM!DateRegistered & " updated to " & DateReg
+    PMAudit!Modified = GPM!DateRegistered & " updated to " & DateReg
     PMAudit!DateTime = Now
     If Not (CUser Is Nothing) Then PMAudit!User = CUser.FullName
     PMAudit.Update
