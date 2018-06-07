@@ -8,6 +8,12 @@ Attribute VB_Creatable = True
 Attribute VB_PredeclaredId = True
 Attribute VB_Exposed = False
 Private Sub Cancel_Click()
+On Error GoTo Err_Handel
+If Not (WOClosing Is noting) Then Set WOClosing = Nothing
+DoCmd.Close acForm, "PMWOClosing"
+DoCmd.OpenForm "MainMenu"
+Exit Sub
+Err_Handel:
 DoCmd.Close acForm, "PMWOClosing"
 DoCmd.OpenForm "MainMenu"
 End Sub
@@ -42,6 +48,7 @@ End If
 End Sub
 
 Private Sub Form_Load()
+Set WOClosing = New WOClosing
 Me.CompleteToggle.Picture = ""
 End Sub
 
@@ -79,10 +86,14 @@ Call Save_PMWOII
 'MsgBox "Finish the clear function", vbOKOnly, ""
 'Clear_Field
 MsgBox "Done", vbInformation, ""
+
+If Not (WOClosing Is noting) Then Set WOClosing = Nothing
+
 DoCmd.Close acForm, "PMWOClosing"
 DoCmd.OpenForm "MainMenu"
 Exit Sub
 Err:
+If Not (WOClosing Is noting) Then Set WOClosing = Nothing
 MsgBox "Error happened!", vbCritical, "Error"
 Call Errs(Err.Description, Err.LastDllError, Err.Number, Err.Source)
 End Sub
@@ -119,7 +130,7 @@ Else
 
     Set WOClosing = New WOClosing
     Me.CompleteToggle.Picture = ""
-    Clear_Field
+'    Clear_Field
 End If
     
     Me!WorkOrder.Form!WONumber = WO.WONumber
@@ -127,7 +138,7 @@ End If
     Me!WorkOrder.Form!DueDate = WO.DueDate
     Me!WorkOrder.Form!RequestedBy = WO.RequestBy
     Me!WorkOrder.Form!RequestedDate = WO.RequestedDate
-    Me!WorkOrder.Form!WOType = WO.WOType
+'    Me!WorkOrder.Form!WOType = WO.WOType
     Me!WorkOrder.Form!Manufacturer = WO.Manufacturer
     Me!WorkOrder.Form!Status = WO.Status
     Me!WorkOrder.Form!WORequest = WO.WORequest

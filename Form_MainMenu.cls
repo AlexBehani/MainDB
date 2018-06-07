@@ -17,8 +17,14 @@ DoCmd.OpenForm "User_Administration"
 End Sub
 
 Private Sub ClosingWO_Click()
+
+If CUser.AccessLevel > 1 Then
+DoCmd.Close acForm, "MainMenu"
+DoCmd.OpenForm "WOClosing"
+Else
 DoCmd.Close acForm, "MainMenu"
 DoCmd.OpenForm "CloseWOInterface"
+End If
 End Sub
 
 Private Sub Equipment_Click()
@@ -52,7 +58,7 @@ End If
 
 If (CUser.AccessLevel > 1) Then
     Me.Administration.Enabled = False
-    Me.ClosingWO.Enabled = False
+'    Me.ClosingWO.Enabled = False
     Me.Equipment.Enabled = False
     Exit Sub
 End If

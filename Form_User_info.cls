@@ -82,7 +82,7 @@ Resume Next
 End Sub
 
 Private Sub SaveButton_Click()
-'On Error GoTo handle_err
+On Error GoTo handle_err
 'Dim FName As String
 'Dim LName As String
 Dim Accss_level As Integer

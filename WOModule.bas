@@ -26,8 +26,9 @@ WORs!AssetNumber = WO.AssetNumber
 WORs!Manufacturer = WO.Manufacturer
 WORs!EngineeringComment = WO.EngineeringComment
 WORs!RequestBy = WO.RequestBy
-WORs!formatwonumber = WO.FormatedWONUmber
-WORs!qrrequired = WO.QRR
+WORs!FormatWONumber = WO.FormatedWONUmber
+WORs!QRrequired = WO.QRR
+WORs!EqDescription = WO.EqDescription
 'WO.WOID = WORs!WOID
 WORs.Update
 
@@ -77,7 +78,7 @@ Set db = CurrentDb
 Set WOR = db.OpenRecordset("SELECT WODescription, ModelNumber, WORequest, " & _
                             "AssignedTo, Status, Completed, RequestedDate, " & _
                             "DueDate, WONumber, AssetNumber, Manufacturer, " & _
-                            "EngineeringComment, RequestBy, formatwonumber, QRrequired FROM WO WHERE ID =" & ID)
+                            "EngineeringComment, RequestBy, formatwonumber, QRrequired, LockedDown FROM WO WHERE ID =" & ID)
 
 
 
@@ -97,8 +98,9 @@ WOR!AssetNumber = WO.AssetNumber
 WOR!Manufacturer = WO.Manufacturer
 WOR!EngineeringComment = WO.EngineeringComment
 WOR!RequestBy = WO.RequestBy
-WOR!formatwonumber = WO.FormatedWONUmber
-WOR!qrrequired = WO.QRR
+WOR!FormatWONumber = WO.FormatedWONUmber
+WOR!QRrequired = WO.QRR
+WOR!LockedDown = WO.LockedDown
 'WO.WOID = WOR!WOID
 WOR.Update
 
@@ -142,9 +144,11 @@ WOTemp.WONumber = WORs!WONumber
 WOTemp.Manufacturer = WORs!Manufacturer
 WOTemp.EngineeringComment = WORs!EngineeringComment
 WOTemp.RequestBy = WORs!RequestBy
-WOTemp.FormatedWONUmber = WORs!formatwonumber
-
-If pre = "WO" Then WOTemp.QRR = WORs!qrrequired
+WOTemp.FormatedWONUmber = WORs!FormatWONumber
+WOTemp.EqDescription = Nz(WORs!EqDescription, "")
+If pre = "WO" Then WOTemp.QRR = WORs!QRrequired
+If pre = "WO" Then WOTemp.Invisible = WORs!Invisible
+If pre = "WO" Then WOTemp.LockedDown = WORs!LockedDown
 'WOTemp.WOID = WORs!WOID
 
 Set Load_WO = WOTemp
@@ -183,6 +187,7 @@ WORs.MoveFirst
 WOClosingTemp.DateDone = Nz(WORs!DateDone, 0)
 WOClosingTemp.TaskComment = Nz(WORs!TaskComment, 0)
 WOClosingTemp.Completed = Nz(WORs!Completed, 0)
+WOClosingTemp.Invisible = WORs!Invisible
 
 
 Set Load_WOClosing = WOClosingTemp
@@ -207,7 +212,7 @@ Set db = CurrentDb
     WORs!TaskComment = WOClosing.TaskComment
 '    WORs!Employee = WOClosing.Employee
     WORs!Completed = WOClosing.Completed
-    If WOClosing.Completed = True Then WORs!closedindb = Now()
+    If WOClosing.Completed = True Then WORs!ClosedinDb = Now()
     WORs.Update
     
 
@@ -246,11 +251,11 @@ Public Function AssetNumberList() As String
 
 Dim db As Database
 Dim Eq As Recordset
-Dim Str As String
+Dim str As String
 
-Str = "N/A;"
+str = "N/A;"
 Set db = CurrentDb
-Set Eq = db.OpenRecordset("SELECT AssetN FROM Equipments WHERE AssetN IS NOT NULL")
+Set Eq = db.OpenRecordset("SELECT AssetN FROM JoinQuery")
 
 If Eq.RecordCount > 0 Then
 
@@ -258,33 +263,57 @@ If Eq.RecordCount > 0 Then
     
     Do While Not Eq.EOF
         
-        Str = Str & Eq!AssetN & ";"
+        str = str & Eq!AssetN & ";"
         Eq.MoveNext
         
     Loop
 End If
 Set Eq = Nothing
 Set db = Nothing
-AssetNumberList = Str
+AssetNumberList = str
 
 End Function
 
 Public Function AssetAssociatedData(Asset As String) As String
 Dim db As Database
 Dim Eq As Recordset
-Dim Str As String
+Dim str As String
 
 Set db = CurrentDb
-Set Eq = db.OpenRecordset("SELECT Manufacturer, Status FROM Equipments WHERE AssetN = '" & Asset & "'")
+Set Eq = db.OpenRecordset("SELECT Manufacturer, Status, Description FROM Equipments WHERE AssetN = '" & Asset & "'")
 
 If Eq.RecordCount > 0 Then
     Eq.MoveFirst
-    Str = Eq!Manufacturer & ";" & Eq!Status
+    str = Eq!Manufacturer & ";" & Eq!Status
+    WO.EqDescription = Nz(Eq!Description, "")
 End If
 
 Set Eq = Nothing
 Set db = Nothing
-AssetAssociatedData = Str
+AssetAssociatedData = str
 
 End Function
+
+
+Public Sub Save_Quality_WOClosing()
+
+Dim db As Database
+Dim WORs As Recordset
+
+Set db = CurrentDb
+
+    Set WORs = db.OpenRecordset("SELECT Invisible FROM WO WHERE ID= " & WOClosing.WOID)
+    WORs.MoveFirst
+    WORs.Edit
+    WORs!Invisible = WOClosing.Invisible
+
+    WORs.Update
+    
+
+
+Set WORs = Nothing
+Set db = Nothing
+'Set WO = Nothing
+    
+End Sub
 

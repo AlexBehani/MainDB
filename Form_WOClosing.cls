@@ -16,11 +16,16 @@ End Sub
 
 
 Private Sub Cancel_Click()
+On Error GoTo Err_Handel
+If Not (WO Is Nothing) Then Set WO = Nothing
+If Not (WOClosing Is Nothing) Then Set WOClosing = Nothing
+DoCmd.Close acForm, "WOClosing"
+DoCmd.OpenForm "MainMenu"
+Exit Sub
+Err_Handel:
 DoCmd.Close acForm, "WOClosing"
 DoCmd.OpenForm "MainMenu"
 
-If Not (WO Is Nothing) Then Set WO = Nothing
-If Not (WOClosing Is Nothing) Then Set WOClosing = Nothing
 
 End Sub
 
@@ -53,11 +58,33 @@ End Sub
 
 Private Sub Form_Load()
 Me.CompleteToggle.Picture = ""
+If CUser.AccessLevel > 1 Then
+    Me.WODropDown.RowSource = "SELECT WO.FormatWONumber, WO.AssetNumber, WO.Manufacturer, WO.DueDate, WO.ID, WO.taskComment " & _
+    "FROM WO WHERE (((WO.WODescription) Is Not Null) AND ((WO.Invisible)=False) AND ((WO.QRrequired)=True));"
+    Me.DateCompleted.Locked = True
+    Me.TaskComment.Locked = True
+    Me.CompleteToggle.Locked = True
+    Me.FilterCombo.Locked = True
+    Me.Invisible.Visible = True
+    Me.InvisibleLabel.Visible = True
+
+End If
 End Sub
 
 Private Sub SaveCommand_Click()
 
-'On Error GoTo Err
+On Error GoTo Err
+
+If CUser.AccessLevel > 1 Then
+
+    If Not WOClosing.Completed Then Exit Sub
+    WOClosing.Invisible = Me.Invisible
+    Save_Quality_WOClosing
+    Exit Sub
+
+End If
+
+
 If Nz(Me.WODropDown.Column(0), "") = "" Then
 
     MsgBox "Please select a Work Order", vbOKOnly, "Work Order?"
@@ -99,11 +126,15 @@ If (WOClosing.Completed) Then
     End If
 End If
 
-    Set WOClosing = New WOClosing
-    Set WO = New WO
-    Me.CompleteToggle.Picture = ""
-    Me.SubFormWorkOrder.Requery
-    Clear_Field
+'    Set WOClosing = New WOClosing
+'    Set WO = New WO
+    Set WOClosing = Nothing
+    Set WO = Nothing
+'    Me.CompleteToggle.Picture = ""
+'    Me.SubFormWorkOrder.Requery
+    DoCmd.Close acForm, "WOClosing"
+    DoCmd.OpenForm "MainMenu"
+'    Clear_Field
 
 Exit Sub
 Err:
@@ -123,11 +154,13 @@ If Not (Nz(Me.WODropDown.Column(5), "") = "") Then
     Else
         Me.DateCompleted = WOClosing.DateDone
     End If
+    
     If (WOClosing.TaskComment = "") Then
         Me.TaskComment = Null
     Else
         Me.TaskComment = WOClosing.TaskComment
     End If
+    
     WOClosing.Edit = True
     WOClosing.WOID = Me.WODropDown.Column(4)
     If (WOClosing.Completed) Then
@@ -136,6 +169,8 @@ If Not (Nz(Me.WODropDown.Column(5), "") = "") Then
         Else
             Me.CompleteToggle.Picture = ""
     End If
+    
+    Me.Invisible = WOClosing.Invisible
         
     
 Else
@@ -150,7 +185,7 @@ End If
     Me!SubFormWorkOrder.Form!DueDate = WO.DueDate
     Me!SubFormWorkOrder.Form!RequestedBy = WO.RequestBy
     Me!SubFormWorkOrder.Form!RequestedDate = WO.RequestedDate
-    Me!SubFormWorkOrder.Form!WOType = WO.WOType
+'    Me!SubFormWorkOrder.Form!WOType = WO.WOType
     Me!SubFormWorkOrder.Form!Manufacturer = WO.Manufacturer
     Me!SubFormWorkOrder.Form!Status = WO.Status
     Me!SubFormWorkOrder.Form!WORequest = WO.WORequest

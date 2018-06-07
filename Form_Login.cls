@@ -134,7 +134,7 @@ End If
 Exit Sub
 handle_err:
 MsgBox "Connection attempt has failed due to network issue" & vbNewLine & vbNewLine & "Please try it again later", vbCritical, "Network Error!"
-'DoCmd.Quit
+DoCmd.Quit
 End Sub
 
 Private Function GetVersion() As String

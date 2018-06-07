@@ -27,6 +27,7 @@ PMWOTemp.DueDate = WORs!DueDate
 PMWOTemp.Manufacturer = Nz(WORs!Manufacturer, "")
 PMWOTemp.EngineeringComment = Nz(WORs!EngineeringComment, "")
 PMWOTemp.RequestedDate = Nz(WORs!RequestedDate, 0)
+PMWOTemp.EqDescription = Nz(WORs!EqDescription, "")
 
 
 Set Load_PMWO = PMWOTemp
@@ -77,9 +78,9 @@ PMRs.Edit
 PMRs!DateDone = WOClosing.DateDone
 PMRs!TaskComment = WOClosing.TaskComment
 PMRs!Completed = WOClosing.Completed
-If WOClosing.Completed = True Then PMRs!closedindb = Now()
+If WOClosing.Completed = True Then PMRs!ClosedinDb = Now()
 'PMRs!WODescription = Nz(PMWO.WODescription, "")
-i = PMRs!gpmid
+i = PMRs!GPMid
  '
 PMRs.Update
 

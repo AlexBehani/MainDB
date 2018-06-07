@@ -6,7 +6,7 @@ Public Function ReturnPMRecord(Asset As String) As String
 
 Dim db As Database
 Dim GPM As Recordset
-Dim Str As String
+Dim str As String
 
 Set db = CurrentDb
 
@@ -26,14 +26,14 @@ GPM.MoveFirst
 
 Do While Not GPM.EOF
 
-    Str = Str & GPM!DateRegistered & ";" & GPM!TaskName & ";" & GPM!Description & ";" & _
+    str = str & GPM!DateRegistered & ";" & GPM!TaskName & ";" & GPM!Description & ";" & _
         GPM!AssetNumber & ";" & GPM!Manufacturer & ";" & GPM!ModelNumber & ";" & _
-        GPM!frequency & ";" & GPM!ID & ";"
+        GPM!Frequency & ";" & GPM!ID & ";"
     GPM.MoveNext
     
 Loop
 
-ReturnPMRecord = Str
+ReturnPMRecord = str
 
 Set GPM = Nothing
 Set db = Nothing
@@ -42,3 +42,25 @@ Set db = Nothing
 End If
 
 End Function
+
+
+Public Sub DeleteGenPM(ID As Long)
+
+Dim db As Database
+Dim GeneralPM As Recordset
+Dim str As String
+
+Set db = CurrentDb
+str = "DELETE * FROM GeneralPM WHERE EQid =" & ID
+
+db.Execute str
+
+
+Set db = Nothing
+Set GeneralPM = Nothing
+
+
+
+
+End Sub
+

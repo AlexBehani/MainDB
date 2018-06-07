@@ -17,4 +17,5 @@ Public TimeDone As Date
 Public TaskComment As String
 Public Employee As String
 Public Completed As Boolean
-
+Public LockedDown As Boolean
+Public Invisible As Boolean

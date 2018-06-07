@@ -12,12 +12,12 @@ Option Compare Database
 
 
 Private Sub AssetNumber_AfterUpdate()
-Dim Str As String
+Dim str As String
 
-Str = AssetAssociatedData(Me.AssetNumber)
-If Len(Str) > 0 Then
-    Me.Manufacturer = Left(Str, InStrRev(Str, ";") - 1)
-    Me.Status = Right(Str, Len(Str) - InStrRev(Str, ";"))
+str = AssetAssociatedData(Me.AssetNumber)
+If Len(str) > 0 Then
+    Me.Manufacturer = Left(str, InStrRev(str, ";") - 1)
+    Me.Status = Right(str, Len(str) - InStrRev(str, ";"))
 Else
     Me.Manufacturer = Null
     Me.Status = Null
@@ -108,6 +108,33 @@ Else
 End If
 Me.AssetNumber.RowSource = AssetNumberList
 Me.QRRCheck = WO.QRR
+Me.EqDesc = WO.EqDescription
+Me.LockedDownCheck = WO.LockedDown
+
+If WO.LockedDown Then
+            
+    Me.DueDate.Locked = True
+    Me.RequestedBy.Locked = True
+    Me.RequestedDate.Locked = True
+    Me.QRRCheck.Locked = True
+    Me.RequestedWork.Locked = True
+    Me.Comment.Locked = True
+    Me.Description.Locked = True
+
+End If
+
+If CUser.AccessLevel > 1 Then
+    Me.LockedDownCheck.Locked = False
+    Me.LockedDownCheck.Visible = True
+    Me.DueDate.Locked = True
+    Me.RequestedBy.Locked = True
+    Me.RequestedDate.Locked = True
+    Me.QRRCheck.Locked = True
+    Me.RequestedWork.Locked = True
+    Me.Comment.Locked = True
+    Me.Description.Locked = True
+End If
+
 
 
 End Sub
@@ -127,10 +154,20 @@ WO.WORequest = Me.RequestedWork
 WO.EngineeringComment = Me.Comment
 WO.WODescription = Me.Description
 WO.QRR = Me.QRRCheck
+WO.LockedDown = Me.LockedDownCheck
 
 
 
 Update_WO (WO.WOID)
+
+If CUser.AccessLevel > 1 Then
+    MsgBox "Done", vbInformation, ""
+    Set WO = Nothing
+    DoCmd.Close acForm, "WorkOrderEditForm"
+    DoCmd.OpenForm "MainMenu"
+    Exit Sub
+End If
+
 If Not (Me.QRRCheck) Then
 DoCmd.OpenReport "WOReport", acViewNormal, , "[id]=" & WO.WOID
 Else

@@ -13,7 +13,7 @@ Public WOID As Integer
 Public WODescription As String
 Public ModelNumber As String
 Public Scheduled As Boolean
-Public WOType As String
+'Public WOType As String
 Public WORequest As String
 Public AssignedTo As String
 Public Status As String
@@ -29,5 +29,7 @@ Public EngineeringComment As String
 Public RequestBy As String
 Public RequestedDate As Date
 Public QRR As Boolean
-
+Public EqDescription As String
+Public LockedDown As Boolean
+Public Invisible As Boolean
 
