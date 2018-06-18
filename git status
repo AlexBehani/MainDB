@@ -1,0 +1,131 @@
+[1mdiff --git a/WOModule.bas b/WOModule.bas[m
+[1mindex 9cbb43c..1b90046 100644[m
+[1m--- a/WOModule.bas[m
+[1m+++ b/WOModule.bas[m
+[36m@@ -100,7 +100,7 @@[m [mWOR!EngineeringComment = WO.EngineeringComment[m
+ WOR!RequestBy = WO.RequestBy[m
+ WOR!FormatWONumber = WO.FormatedWONUmber[m
+ WOR!QRrequired = WO.QRR[m
+[31m-WOR!LockedDown = WO.LockedDown[m
+[32m+[m[32m'WOR!LockedDown = WO.LockedDown[m
+ 'WO.WOID = WOR!WOID[m
+ WOR.Update[m
+ [m
+[36m@@ -147,9 +147,10 @@[m [mWOTemp.RequestBy = WORs!RequestBy[m
+ WOTemp.FormatedWONUmber = WORs!FormatWONumber[m
+ WOTemp.EqDescription = Nz(WORs!EqDescription, "")[m
+ If pre = "WO" Then WOTemp.QRR = WORs!QRrequired[m
+[31m-If pre = "WO" Then WOTemp.Invisible = WORs!Invisible[m
+[32m+[m[32m'If pre = "WO" Then WOTemp.Closed = WORs!Closed[m
+ If pre = "WO" Then WOTemp.LockedDown = WORs!LockedDown[m
+[31m-'WOTemp.WOID = WORs!WOID[m
+[32m+[m[32mIf pre = "WO" Then WOTemp.WOID = WORs!ID Else WOTemp.WOID = WORs!WOID[m
+[32m+[m[32mIf pre = "WO" Then WOTemp.Completed = WORs!Completed[m
+ [m
+ Set Load_WO = WOTemp[m
+ [m
+[36m@@ -187,7 +188,7 @@[m [mWORs.MoveFirst[m
+ WOClosingTemp.DateDone = Nz(WORs!DateDone, 0)[m
+ WOClosingTemp.TaskComment = Nz(WORs!TaskComment, 0)[m
+ WOClosingTemp.Completed = Nz(WORs!Completed, 0)[m
+[31m-WOClosingTemp.Invisible = WORs!Invisible[m
+[32m+[m[32m'WOClosingTemp.Closed = WORs!Closed[m
+ [m
+ [m
+ Set Load_WOClosing = WOClosingTemp[m
+[36m@@ -251,9 +252,9 @@[m [mPublic Function AssetNumberList() As String[m
+ [m
+ Dim db As Database[m
+ Dim Eq As Recordset[m
+[31m-Dim str As String[m
+[32m+[m[32mDim Str As String[m
+ [m
+[31m-str = "N/A;"[m
+[32m+[m[32mStr = "N/A;"[m
+ Set db = CurrentDb[m
+ Set Eq = db.OpenRecordset("SELECT AssetN FROM JoinQuery")[m
+ [m
+[36m@@ -263,57 +264,57 @@[m [mIf Eq.RecordCount > 0 Then[m
+     [m
+     Do While Not Eq.EOF[m
+         [m
+[31m-        str = str & Eq!AssetN & ";"[m
+[32m+[m[32m        Str = Str & Eq!AssetN & ";"[m
+         Eq.MoveNext[m
+         [m
+     Loop[m
+ End If[m
+ Set Eq = Nothing[m
+ Set db = Nothing[m
+[31m-AssetNumberList = str[m
+[32m+[m[32mAssetNumberList = Str[m
+ [m
+ End Function[m
+ [m
+ Public Function AssetAssociatedData(Asset As String) As String[m
+ Dim db As Database[m
+ Dim Eq As Recordset[m
+[31m-Dim str As String[m
+[32m+[m[32mDim Str As String[m
+ [m
+ Set db = CurrentDb[m
+ Set Eq = db.OpenRecordset("SELECT Manufacturer, Status, Description FROM Equipments WHERE AssetN = '" & Asset & "'")[m
+ [m
+ If Eq.RecordCount > 0 Then[m
+     Eq.MoveFirst[m
+[31m-    str = Eq!Manufacturer & ";" & Eq!Status[m
+[32m+[m[32m    Str = Eq!Manufacturer & ";" & Eq!Status[m
+     WO.EqDescription = Nz(Eq!Description, "")[m
+ End If[m
+ [m
+ Set Eq = Nothing[m
+ Set db = Nothing[m
+[31m-AssetAssociatedData = str[m
+[32m+[m[32mAssetAssociatedData = Str[m
+ [m
+ End Function[m
+ [m
+ [m
+[31m-Public Sub Save_Quality_WOClosing()[m
+[31m-[m
+[31m-Dim db As Database[m
+[31m-Dim WORs As Recordset[m
+[31m-[m
+[31m-Set db = CurrentDb[m
+[31m-[m
+[31m-    Set WORs = db.OpenRecordset("SELECT Invisible FROM WO WHERE ID= " & WOClosing.WOID)[m
+[31m-    WORs.MoveFirst[m
+[31m-    WORs.Edit[m
+[31m-    WORs!Invisible = WOClosing.Invisible[m
+[31m-[m
+[31m-    WORs.Update[m
+[31m-    [m
+[31m-[m
+[31m-[m
+[31m-Set WORs = Nothing[m
+[31m-Set db = Nothing[m
+[31m-'Set WO = Nothing[m
+[31m-    [m
+[31m-End Sub[m
+[32m+[m[32m'Public Sub Save_Quality_WOClosing()[m
+[32m+[m[32m'[m
+[32m+[m[32m'Dim db As Database[m
+[32m+[m[32m'Dim WORs As Recordset[m
+[32m+[m[32m'[m
+[32m+[m[32m'Set db = CurrentDb[m
+[32m+[m[32m'[m
+[32m+[m[32m'    Set WORs = db.OpenRecordset("SELECT Closed FROM WO WHERE ID= " & WOClosing.WOID)[m
+[32m+[m[32m'    WORs.MoveFirst[m
+[32m+[m[32m'    WORs.Edit[m
+[32m+[m[32m'    WORs!Closed = WOClosing.Closed[m
+[32m+[m[32m'[m
+[32m+[m[32m'    WORs.Update[m
+[32m+[m[32m'[m
+[32m+[m[32m'[m
+[32m+[m[32m'[m
+[32m+[m[32m'Set WORs = Nothing[m
+[32m+[m[32m'Set db = Nothing[m
+[32m+[m[32m''Set WO = Nothing[m
+[32m+[m[32m'[m
+[32m+[m[32m'End Sub[m
+ [m

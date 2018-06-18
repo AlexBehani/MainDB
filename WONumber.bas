@@ -4,18 +4,18 @@ Option Compare Database
 Public Function PMWOFormatNo(pre As String, n As Integer)
  
 Dim C As Integer, L As Integer
-Dim str As String, j As Integer
+Dim Str As String, j As Integer
 
 C = 6
- str = ""
+ Str = ""
 
  L = C - Len(CStr(n))
 
 For j = 0 To L - 1
-    str = str & 0
+    Str = Str & 0
 Next j
 
-PMWOFormatNo = pre & str & n
+PMWOFormatNo = pre & Str & n
 End Function
 
 
@@ -45,7 +45,7 @@ Function MinAvailPMWONo() As Integer
 
 Dim db As Database
 Dim PMWO As Recordset
-Dim str As String
+Dim Str As String
 
 
 Set db = CurrentDb
@@ -68,7 +68,7 @@ Public Function PMWORowlist(pre As String, Optional Filter As String) As String
 
 Dim db As Database
 Dim PMWO As Recordset
-Dim str As String
+Dim Str As String
 Set db = CurrentDb
 
 If Filter = "New" Then
@@ -84,7 +84,7 @@ If Filter = "New" Then
 
     Do While Not PMWO.EOF
 
-        str = str & PMWO!FormatWONumber & ";" & PMWO!WOID & ";"
+        Str = Str & PMWO!FormatWONumber & ";" & PMWO!WOID & ";"
         PMWO.MoveNext
     Loop
 
@@ -101,7 +101,7 @@ ElseIf Filter = "Existed ones" Then
 
     Do While Not PMWO.EOF
 
-        str = str & PMWO!FormatWONumber & ";" & PMWO!WOID & ";"
+        Str = Str & PMWO!FormatWONumber & ";" & PMWO!WOID & ";"
         PMWO.MoveNext
     Loop
     
@@ -117,31 +117,29 @@ Else
 
     Do While Not PMWO.EOF
 
-        str = str & PMWO!FormatWONumber & ";" & PMWO!WOID & ";"
+        Str = Str & PMWO!FormatWONumber & ";" & PMWO!WOID & ";"
         PMWO.MoveNext
     Loop
 
 End If
 
 
-PMWORowlist = str
+PMWORowlist = Str
 
 End Function
-
-
 
 Public Function WORowlist() As String
 On Error GoTo Err_Handel
 
 Dim db As Database
 Dim WO As Recordset
-Dim str As String
+Dim Str As String
 Set db = CurrentDb
 
 
 If (CUser.AccessLevel > 2) Then
-    str = ""
-    Set WO = db.OpenRecordset("SELECT FormatWONumber, ID FROM WO WHERE QRrequired =True AND Invisible =False")
+    Str = ""
+    Set WO = db.OpenRecordset("SELECT FormatWONumber, ID FROM WO WHERE QRrequired =True")
     
     If Not (WO.RecordCount > 0) Then
         WORowlist = ""
@@ -152,15 +150,15 @@ If (CUser.AccessLevel > 2) Then
 
     Do While Not WO.EOF
 
-        str = str & WO!FormatWONumber & ";" & WO!ID & ";"
+        Str = Str & WO!FormatWONumber & ";" & WO!ID & ";"
         WO.MoveNext
     Loop
 
-    WORowlist = str
+    WORowlist = Str
 
 Else
-    str = ""
-    Set WO = db.OpenRecordset("SELECT FormatWONumber, ID FROM WO WHERE Invisible =False")
+    Str = ""
+    Set WO = db.OpenRecordset("SELECT FormatWONumber, ID FROM WO")
     
     If Not (WO.RecordCount > 0) Then
         WORowlist = ""
@@ -171,11 +169,11 @@ Else
 
     Do While Not WO.EOF
 
-        str = str & WO!FormatWONumber & ";" & WO!ID & ";"
+        Str = Str & WO!FormatWONumber & ";" & WO!ID & ";"
         WO.MoveNext
     Loop
 
-    WORowlist = str
+    WORowlist = Str
 End If
 
 Exit Function

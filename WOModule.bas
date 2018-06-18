@@ -100,7 +100,7 @@ WOR!EngineeringComment = WO.EngineeringComment
 WOR!RequestBy = WO.RequestBy
 WOR!FormatWONumber = WO.FormatedWONUmber
 WOR!QRrequired = WO.QRR
-WOR!LockedDown = WO.LockedDown
+'WOR!LockedDown = WO.LockedDown
 'WO.WOID = WOR!WOID
 WOR.Update
 
@@ -147,9 +147,10 @@ WOTemp.RequestBy = WORs!RequestBy
 WOTemp.FormatedWONUmber = WORs!FormatWONumber
 WOTemp.EqDescription = Nz(WORs!EqDescription, "")
 If pre = "WO" Then WOTemp.QRR = WORs!QRrequired
-If pre = "WO" Then WOTemp.Invisible = WORs!Invisible
+'If pre = "WO" Then WOTemp.Closed = WORs!Closed
 If pre = "WO" Then WOTemp.LockedDown = WORs!LockedDown
-'WOTemp.WOID = WORs!WOID
+If pre = "WO" Then WOTemp.WOID = WORs!ID Else WOTemp.WOID = WORs!WOID
+If pre = "WO" Then WOTemp.Completed = WORs!Completed
 
 Set Load_WO = WOTemp
 
@@ -187,7 +188,7 @@ WORs.MoveFirst
 WOClosingTemp.DateDone = Nz(WORs!DateDone, 0)
 WOClosingTemp.TaskComment = Nz(WORs!TaskComment, 0)
 WOClosingTemp.Completed = Nz(WORs!Completed, 0)
-WOClosingTemp.Invisible = WORs!Invisible
+'WOClosingTemp.Closed = WORs!Closed
 
 
 Set Load_WOClosing = WOClosingTemp
@@ -251,9 +252,9 @@ Public Function AssetNumberList() As String
 
 Dim db As Database
 Dim Eq As Recordset
-Dim str As String
+Dim Str As String
 
-str = "N/A;"
+Str = "N/A;"
 Set db = CurrentDb
 Set Eq = db.OpenRecordset("SELECT AssetN FROM JoinQuery")
 
@@ -263,57 +264,57 @@ If Eq.RecordCount > 0 Then
     
     Do While Not Eq.EOF
         
-        str = str & Eq!AssetN & ";"
+        Str = Str & Eq!AssetN & ";"
         Eq.MoveNext
         
     Loop
 End If
 Set Eq = Nothing
 Set db = Nothing
-AssetNumberList = str
+AssetNumberList = Str
 
 End Function
 
 Public Function AssetAssociatedData(Asset As String) As String
 Dim db As Database
 Dim Eq As Recordset
-Dim str As String
+Dim Str As String
 
 Set db = CurrentDb
 Set Eq = db.OpenRecordset("SELECT Manufacturer, Status, Description FROM Equipments WHERE AssetN = '" & Asset & "'")
 
 If Eq.RecordCount > 0 Then
     Eq.MoveFirst
-    str = Eq!Manufacturer & ";" & Eq!Status
+    Str = Eq!Manufacturer & ";" & Eq!Status
     WO.EqDescription = Nz(Eq!Description, "")
 End If
 
 Set Eq = Nothing
 Set db = Nothing
-AssetAssociatedData = str
+AssetAssociatedData = Str
 
 End Function
 
 
-Public Sub Save_Quality_WOClosing()
-
-Dim db As Database
-Dim WORs As Recordset
-
-Set db = CurrentDb
-
-    Set WORs = db.OpenRecordset("SELECT Invisible FROM WO WHERE ID= " & WOClosing.WOID)
-    WORs.MoveFirst
-    WORs.Edit
-    WORs!Invisible = WOClosing.Invisible
-
-    WORs.Update
-    
-
-
-Set WORs = Nothing
-Set db = Nothing
-'Set WO = Nothing
-    
-End Sub
+'Public Sub Save_Quality_WOClosing()
+'
+'Dim db As Database
+'Dim WORs As Recordset
+'
+'Set db = CurrentDb
+'
+'    Set WORs = db.OpenRecordset("SELECT Closed FROM WO WHERE ID= " & WOClosing.WOID)
+'    WORs.MoveFirst
+'    WORs.Edit
+'    WORs!Closed = WOClosing.Closed
+'
+'    WORs.Update
+'
+'
+'
+'Set WORs = Nothing
+'Set db = Nothing
+''Set WO = Nothing
+'
+'End Sub
 
