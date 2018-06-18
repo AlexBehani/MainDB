@@ -53,7 +53,7 @@ Ydate = Year(GenPM!DateRegistered)
 '                    PMWO!WONumber = AvailNo
 '                    PMWO!formatwonumber = PMWOFormatNo("PMWO", AvailNo)
                     PMWO!GPMid = GenPM!ID
-                    PMWO!DateRegistered = GenPM!DateRegistered
+                    PMWO!DateRegistered = RectifyDate(GenPM!DateRegistered)
                     PMWO!EqDescription = GenPM!EqDescription
                     PMWO.Update
 '                    AvailNo = AvailNo + 1
@@ -81,7 +81,7 @@ Ydate = Year(GenPM!DateRegistered)
 '                    PMWO!WONumber = AvailNo
 '                    PMWO!formatwonumber = PMWOFormatNo("PMWO", AvailNo)
                     PMWO!GPMid = GenPM!ID
-                    PMWO!DateRegistered = GenPM!DateRegistered
+                    PMWO!DateRegistered = RectifyDate(GenPM!DateRegistered)
                     PMWO!EqDescription = GenPM!EqDescription
                     PMWO.Update
 '                    AvailNo = AvailNo + 1
@@ -109,7 +109,7 @@ Ydate = Year(GenPM!DateRegistered)
 '                    PMWO!WONumber = AvailNo
 '                    PMWO!formatwonumber = PMWOFormatNo("PMWO", AvailNo)
                     PMWO!GPMid = GenPM!ID
-                    PMWO!DateRegistered = GenPM!DateRegistered
+                    PMWO!DateRegistered = RectifyDate(GenPM!DateRegistered)
                     PMWO!EqDescription = GenPM!EqDescription
                     PMWO.Update
 '                    AvailNo = AvailNo + 1
@@ -136,7 +136,7 @@ Ydate = Year(GenPM!DateRegistered)
 '                    PMWO!WONumber = AvailNo
 '                    PMWO!formatwonumber = PMWOFormatNo("PMWO", AvailNo)
                     PMWO!GPMid = GenPM!ID
-                    PMWO!DateRegistered = GenPM!DateRegistered
+                    PMWO!DateRegistered = RectifyDate(GenPM!DateRegistered)
                     PMWO!EqDescription = GenPM!EqDescription
                     PMWO.Update
 '                    AvailNo = AvailNo + 1
@@ -161,7 +161,7 @@ Ydate = Year(GenPM!DateRegistered)
 '                    PMWO!WONumber = AvailNo
 '                    PMWO!formatwonumber = PMWOFormatNo("PMWO", AvailNo)
                     PMWO!GPMid = GenPM!ID
-                    PMWO!DateRegistered = GenPM!DateRegistered
+                    PMWO!DateRegistered = RectifyDate(GenPM!DateRegistered)
                     PMWO!EqDescription = GenPM!EqDescription
                     PMWO.Update
 '                    AvailNo = AvailNo + 1
@@ -185,7 +185,7 @@ Ydate = Year(GenPM!DateRegistered)
 '                    PMWO!WONumber = AvailNo
 '                    PMWO!formatwonumber = PMWOFormatNo("PMWO", AvailNo)
                     PMWO!GPMid = GenPM!ID
-                    PMWO!DateRegistered = GenPM!DateRegistered
+                    PMWO!DateRegistered = RectifyDate(GenPM!DateRegistered)
                     PMWO!EqDescription = GenPM!EqDescription
                     PMWO.Update
 '                    AvailNo = AvailNo + 1
@@ -212,7 +212,7 @@ Ydate = Year(GenPM!DateRegistered)
 '                    PMWO!WONumber = AvailNo
 '                    PMWO!formatwonumber = PMWOFormatNo("PMWO", AvailNo)
                     PMWO!GPMid = GenPM!ID
-                    PMWO!DateRegistered = GenPM!DateRegistered
+                    PMWO!DateRegistered = RectifyDate(GenPM!DateRegistered)
                     PMWO!EqDescription = GenPM!EqDescription
                     PMWO.Update
 '                    AvailNo = AvailNo + 1
@@ -238,7 +238,7 @@ Ydate = Year(GenPM!DateRegistered)
 '                    PMWO!WONumber = AvailNo
 '                    PMWO!formatwonumber = PMWOFormatNo("PMWO", AvailNo)
                     PMWO!GPMid = GenPM!ID
-                    PMWO!DateRegistered = GenPM!DateRegistered
+                    PMWO!DateRegistered = RectifyDate(GenPM!DateRegistered)
                     PMWO!EqDescription = GenPM!EqDescription
                     PMWO.Update
 '                    AvailNo = AvailNo + 1
@@ -263,7 +263,7 @@ Ydate = Year(GenPM!DateRegistered)
 '                    PMWO!WONumber = AvailNo
 '                    PMWO!formatwonumber = PMWOFormatNo("PMWO", AvailNo)
                     PMWO!GPMid = GenPM!ID
-                    PMWO!DateRegistered = GenPM!DateRegistered
+                    PMWO!DateRegistered = RectifyDate(GenPM!DateRegistered)
                     PMWO!EqDescription = GenPM!EqDescription
                     PMWO.Update
 '                    AvailNo = AvailNo + 1
@@ -310,11 +310,11 @@ Public Sub DeleteOldPM()
 On Error GoTo Err
 Dim db As Database
 'Dim GPM As Recordset
-Dim str As String
+Dim Str As String
 Set db = CurrentDb
-str = "DELETE * FROM TempStorePMWO"
+Str = "DELETE * FROM TempStorePMWO"
 
-db.Execute str
+db.Execute Str
 
 'Set GPM = db.OpenRecordset("DELETE FROM TempStorePMWO WHERE month(DueDate) =" & Month(Date) & " AND Year(DueDate)=" & Year(Date))
 
@@ -406,4 +406,16 @@ Set PMAudit = Nothing
 'Set GPM = Nothing
 Set db = Nothing
 
+End Function
+
+Function RectifyDate(RegDate As Date) As Date
+Dim Mdate As String
+Dim Ydate As String
+If Day(RegDate) > 28 Then
+Mdate = Month(RegDate)
+Ydate = Year(RegDate)
+RectifyDate = CDate(Mdate & "/28/" & Ydate)
+Else
+recifydate = RegDate
+End If
 End Function
