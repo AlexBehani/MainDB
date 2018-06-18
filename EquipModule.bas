@@ -28,7 +28,7 @@ Set Eq = db.OpenRecordset("Equipments")
     Eq!Manufacturer = Equip.Manufacturer
     Eq!EquipmentType = Equip.EquipmentType
     Eq!Status = Equip.Status
-    Eq!System = Equip.System
+'    Eq!System = Equip.System
     
 
     Eq.Update
@@ -92,7 +92,7 @@ Set Eq = db.OpenRecordset("SELECT Description, AssetN,ModelN, SerialN," & _
     Eq!Manufacturer = Equip.Manufacturer
     Eq!EquipmentType = Equip.EquipmentType
     Eq!Status = Equip.Status
-    Eq!System = Equip.System
+'    Eq!System = Equip.System
     
 
     Eq.Update
@@ -126,7 +126,7 @@ EqTemp.EquipmentNumber = Eq!EquipmentN
 EqTemp.EquipmentType = Eq!EquipmentType
 EqTemp.Status = Eq!Status
 EqTemp.Manufacturer = Eq!Manufacturer
-EqTemp.System = Eq!System
+'EqTemp.System = Nz(Eq!System, "")
 
 Set Load_Eq = EqTemp
 Set db = Nothing
@@ -201,6 +201,7 @@ For n = LBound(Arr) To UBound(Arr) - 1
     GenPM!Frequency = PMList!Frequency
     GenPM!Manufacturer = Equip.Manufacturer
     GenPM!Status = Equip.Status
+    GenPM!EqDescription = Equip.Description
     GenPM!eqid = RowNumber
     GenPM.Update
     
@@ -286,11 +287,11 @@ Set db = CurrentDb
 
 For j = 0 To i - 1
     
-    Set PMTsk = db.OpenRecordset("SELECT Task_Name, Description, Frequency, PMID FROM PMTask WHERE PMID =" & Arr(j))
+    Set PMTsk = db.OpenRecordset("SELECT AssignedTo, Description, Frequency, PMID FROM PMTask WHERE PMID =" & Arr(j))
         PMTsk.MoveFirst
-        PM(j, 0) = PMTsk!Task_Name
-        PM(j, 1) = PMTsk!Description
-        PM(j, 2) = PMTsk!Frequency
+        PM(j, 0) = PMTsk!AssignedTo
+        PM(j, 1) = PMTsk!Frequency
+        PM(j, 2) = PMTsk!Description
         PM(j, 3) = PMTsk!PMID
         Set PMTsk = Nothing
 Next j
@@ -298,5 +299,43 @@ Next j
 PMTaskList = PM
 Set db = Nothing
 'If Not (PM Is Nothing) Then Set PM = Nothing
+
+End Function
+
+
+Function UniqueAssetN(AssetN As String) As Boolean
+
+Dim db As Database
+Dim Eq As Recordset
+
+Set db = CurrentDb
+Set Eq = db.OpenRecordset("SELECT [_ID] FROM Equipments WHERE AssetN='" & AssetN & "'")
+
+If Eq.RecordCount > 0 Then
+    UniqueAssetN = False
+Else
+    UniqueAssetN = True
+End If
+
+
+Set db = Nothing
+Set Eq = Nothing
+End Function
+
+
+Public Function AvailAssetN() As String
+Dim n As Integer
+AvailAssetN = DMax("AssetN", "Equipments") + 1
+
+n = 4 - Len(AvailAssetN)
+If n > 0 Then
+
+    For i = 1 To n
+    
+        AvailAssetN = "0" & AvailAssetN
+        
+    Next i
+    
+End If
 
 End Function
