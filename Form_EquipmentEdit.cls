@@ -19,7 +19,7 @@ End Sub
 
 Private Sub Delete_Click()
 
-If (Nz(Equip.ID, 0) = 0) Then Exit Sub
+If (Nz(Equip.id, 0) = 0) Then Exit Sub
 
 If (MsgBox("You're about to delete a record" & vbNewLine & "Are you sure?", vbQuestion + vbYesNo, "Delete?") = vbNo) Then Exit Sub
 Call Delete_Eq
@@ -46,7 +46,7 @@ Me.Manufacturer = Equip.Manufacturer
 Me.StatusCombo = Equip.Status
 Me.SystemCombo = Equip.System
 Me.DateReqistered = Equip.DateRegistered
-Row = PMListRow(Equip.ID)
+Row = PMListRow(Equip.id)
 
 i = UBound(Row)
 
@@ -136,21 +136,24 @@ Equip.ModelNumber = Me.ModelNumber
 Equip.DateRegistered = Me.DateReqistered
 Equip.EquipmentType = Me.EquipmentTypeCombo
 Equip.Manufacturer = Me.Manufacturer
-Equip.System = Nz(Me.SystemCombo, "")
+'Equip.System = Nz(Me.SystemCombo, "")
 Equip.Status = Me.StatusCombo
 
 
-Update_Eq (Equip.ID)
-DeleteGenPM (Equip.ID)
+Update_Eq (Equip.id)
+DeleteGenPM (Equip.id)
 
 If Equip.Status = "In-Service" Or (Equip.Status = "Spare" And Equip.EquipmentType = "Instrument") Then
-    Call Save_GenPM(Arr(), Equip.ID)
+    Call Save_GenPM(Arr(), Equip.id)
+    Call EquipmentsAudit(Arr(), Equip.id, "Edit Equipment")
+Else
+    Call EquipmentsAudit_noPM("Edit Equipment")
 End If
 
 'Call Clear_Field
 'Me.PMList.RowSource = ""
 'Me.Equipments_subform.Requery
-
+Set Equip = Nothing
 DoCmd.OpenForm "MainMenu"
 DoCmd.Close acForm, "EquipmentEdit"
 

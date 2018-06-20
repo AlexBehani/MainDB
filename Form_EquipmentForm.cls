@@ -17,9 +17,11 @@ DoCmd.OpenForm "MainMenu"
 
 End Sub
 
+
+
 Private Sub Delete_Click()
 
-If (Nz(Equip.ID, 0) = 0) Then Exit Sub
+If (Nz(Equip.id, 0) = 0) Then Exit Sub
 
 If (MsgBox("You're about to delete a record" & vbNewLine & "Are you sure?", vbQuestion + vbYesNo, "Delete?") = vbNo) Then Exit Sub
 Call Delete_Eq
@@ -34,6 +36,7 @@ End Sub
 Private Sub Form_Load()
 Set Equip = New Equipments
 Equip.Edit = False
+Me.AssetNumber = AvailAssetN
 
 End Sub
 
@@ -83,8 +86,23 @@ If (Me.StatusCombo = "Spare" And Me.EquipmentTypeCombo = "Instrument") Then
     Me.SystemCombo.Tag = ""
 End If
 
+
+
 If (Em_Field) Then Exit Sub
 
+If (Len(Me.AssetNumber) <> 4) Then
+
+    MsgBox "The Asset Number is not acceptable", vbCritical, ""
+    Me.AssetNumber = Null
+    Exit Sub
+End If
+
+If Not UniqueAssetN(Me.AssetNumber) Then
+    
+    MsgBox "The Asset Number is duplicated", vbCritical, ""
+    Me.AssetNumber = ""
+    Exit Sub
+End If
 
 Dim Arr() As Variant
 Dim i As Integer
@@ -115,7 +133,7 @@ Equip.ModelNumber = Me.ModelNumber
 Equip.DateRegistered = Me.DateReqistered
 Equip.EquipmentType = Me.EquipmentTypeCombo
 Equip.Manufacturer = Me.Manufacturer
-Equip.System = Nz(Me.SystemCombo, "")
+'Equip.System = Nz(Me.SystemCombo, "")
 Equip.Status = Me.StatusCombo
 
 
@@ -123,11 +141,15 @@ RowNumber = Save_Eq
 
 If Equip.Status = "In-Service" Or (Equip.Status = "Spare" And Equip.EquipmentType = "Instrument") Then
     Call Save_GenPM(Arr(), RowNumber)
+    Call EquipmentsAudit(Arr(), RowNumber, "New Equipment")
+Else
+    EquipmentsAudit_noPM ("New Equipment")
 End If
 
 'Call Clear_Field
 'Me.PMList.RowSource = ""
 'Me.Equipments_subform.Requery
+Set Equip = Nothing
 
 DoCmd.OpenForm "MainMenu"
 DoCmd.Close acForm, "EquipmentForm"
