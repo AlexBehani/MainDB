@@ -29,6 +29,8 @@ WORs!RequestBy = WO.RequestBy
 WORs!FormatWONumber = WO.FormatedWONUmber
 WORs!QRrequired = WO.QRR
 WORs!EqDescription = WO.EqDescription
+WORs!QAComment = ""
+WORs!EngQAComment = WO.EngineeringComment
 'WO.WOID = WORs!WOID
 WORs.Update
 
@@ -48,11 +50,11 @@ Set WORecordset = db.OpenRecordset("SELECT ID FROM WO WHERE FormatWONUmber = '" 
 
 If WORecordset.RecordCount > 0 Then
     WORecordset.MoveFirst
-    FindWOID = WORecordset!ID
+    FindWOID = WORecordset!id
 Else
 
     Set WORecordset = db.OpenRecordset("SELECT TOP(ID) FROM WO")
-    FindWOID = WORecordset!ID
+    FindWOID = WORecordset!id
 
 End If
 
@@ -65,7 +67,7 @@ End Function
 
 
 
-Public Function Update_WO(ID As Integer)
+Public Function Update_WO(id As Integer)
 
 
 Dim db As Database
@@ -78,7 +80,8 @@ Set db = CurrentDb
 Set WOR = db.OpenRecordset("SELECT WODescription, ModelNumber, WORequest, " & _
                             "AssignedTo, Status, Completed, RequestedDate, " & _
                             "DueDate, WONumber, AssetNumber, Manufacturer, " & _
-                            "EngineeringComment, RequestBy, formatwonumber, QRrequired, LockedDown FROM WO WHERE ID =" & ID)
+                            "EngineeringComment, RequestBy, formatwonumber, " & _
+                            "QRrequired, LockedDown, QAComment, EngQAComment FROM WO WHERE ID =" & id)
 
 
 
@@ -100,6 +103,13 @@ WOR!EngineeringComment = WO.EngineeringComment
 WOR!RequestBy = WO.RequestBy
 WOR!FormatWONumber = WO.FormatedWONUmber
 WOR!QRrequired = WO.QRR
+WOR!QAComment = WO.QAComment
+
+If Nz(WO.QAComment, "") <> "" Then
+    WOR!EngQAComment = WO.EngineeringComment & vbNewLine & "QA Comment: " & WO.QAComment
+Else
+    WOR!EngQAComment = WO.EngineeringComment
+End If
 'WOR!LockedDown = WO.LockedDown
 'WO.WOID = WOR!WOID
 WOR.Update
@@ -111,7 +121,7 @@ Set WOR = Nothing
 End Function
 
 'Load PMWO, and also WO
-Function Load_WO(pre As String, ID As Integer)
+Function Load_WO(pre As String, id As Integer)
 
 Dim WOTemp As WO
 Dim db As Database
@@ -122,11 +132,11 @@ Set db = CurrentDb
    Set WOTemp = New WO
 If pre = "WO" Then
 
-    Set WORs = db.OpenRecordset("SELECT * FROM WO WHERE ID= " & ID)
+    Set WORs = db.OpenRecordset("SELECT * FROM WO WHERE ID= " & id)
 
 ElseIf pre = "PMWO" Then
 
-    Set WORs = db.OpenRecordset("SELECT * FROM PMWO WHERE WOID= " & ID)
+    Set WORs = db.OpenRecordset("SELECT * FROM PMWO WHERE WOID= " & id)
 
 End If
 
@@ -149,8 +159,9 @@ WOTemp.EqDescription = Nz(WORs!EqDescription, "")
 If pre = "WO" Then WOTemp.QRR = WORs!QRrequired
 'If pre = "WO" Then WOTemp.Closed = WORs!Closed
 If pre = "WO" Then WOTemp.LockedDown = WORs!LockedDown
-If pre = "WO" Then WOTemp.WOID = WORs!ID Else WOTemp.WOID = WORs!WOID
+If pre = "WO" Then WOTemp.WOID = WORs!id Else WOTemp.WOID = WORs!WOID
 If pre = "WO" Then WOTemp.Completed = WORs!Completed
+WOTemp.QAComment = Nz(WORs!QAComment, "")
 
 Set Load_WO = WOTemp
 
@@ -162,7 +173,7 @@ Set WOTemp = Nothing
 
 End Function
 
-Function Load_WOClosing(pre As String, ID As Integer) As WOClosing
+Function Load_WOClosing(pre As String, id As Integer) As WOClosing
 
 Dim WOClosingTemp As WOClosing
 Dim db As Database
@@ -172,11 +183,11 @@ Set db = CurrentDb
 
 If pre = "WO" Then
 
-    Set WORs = db.OpenRecordset("SELECT * FROM WO WHERE ID= " & ID)
+    Set WORs = db.OpenRecordset("SELECT * FROM WO WHERE ID= " & id)
 
 ElseIf pre = "PMWO" Then
 
-    Set WORs = db.OpenRecordset("SELECT * FROM PMWO WHERE WOID= " & ID)
+    Set WORs = db.OpenRecordset("SELECT * FROM PMWO WHERE WOID= " & id)
 
 End If
 
