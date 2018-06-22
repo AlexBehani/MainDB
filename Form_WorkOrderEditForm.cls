@@ -12,12 +12,12 @@ Option Compare Database
 
 
 Private Sub AssetNumber_AfterUpdate()
-Dim str As String
+Dim Str As String
 
-str = AssetAssociatedData(Me.AssetNumber)
-If Len(str) > 0 Then
-    Me.Manufacturer = Left(str, InStrRev(str, ";") - 1)
-    Me.Status = Right(str, Len(str) - InStrRev(str, ";"))
+Str = AssetAssociatedData(Me.AssetNumber)
+If Len(Str) > 0 Then
+    Me.Manufacturer = Left(Str, InStrRev(Str, ";") - 1)
+    Me.Status = Right(Str, Len(Str) - InStrRev(Str, ";"))
 Else
     Me.Manufacturer = Null
     Me.Status = Null
@@ -88,9 +88,11 @@ DoCmd.OpenForm "MainMenu"
 End Sub
 
 Private Sub Form_Load()
-If CredentialsCheck Then
-Me.RequestedBy = CUser.FullName
-End If
+
+'If CredentialsCheck Then
+'Me.RequestedBy = CUser.FullName
+'End If
+Me.RequestedBy = WO.RequestBy
 Me.WONumber = WO.FormatedWONUmber
 Me.AssetNumber = WO.AssetNumber
 Me.DueDate = WO.DueDate
@@ -101,18 +103,22 @@ Me.Status = WO.Status
 Me.RequestedWork = Nz(WO.WORequest, "")
 Me.Comment = Nz(WO.EngineeringComment, "")
 'Me.Description = Nz(WO.WODescription, "")
-If (Nz(WO.WODescription, "") = "") Then
-    Me.Description = Null
-Else
-    Me.Description = WO.WODescription
-End If
-Me.AssetNumber.RowSource = AssetNumberList
+
+'If (Nz(WO.WODescription, "") = "") Then
+'    Me.Description = Null
+'Else
+'    Me.Description = WO.WODescription
+'End If
+Me.QAComment = Nz(WO.QAComment, "")
+'Me.AssetNumber.RowSource = AssetNumberList
 Me.QRRCheck = WO.QRR
 Me.EqDesc = WO.EqDescription
 Me.LockedDownCheck = WO.LockedDown
 
-If WO.LockedDown Then
-            
+If WO.Completed Then
+
+    Me.LockedDownCheck.Locked = True
+    Me.LockedDownCheck.Visible = False
     Me.DueDate.Locked = True
     Me.RequestedBy.Locked = True
     Me.RequestedDate.Locked = True
@@ -120,20 +126,90 @@ If WO.LockedDown Then
     Me.RequestedWork.Locked = True
     Me.Comment.Locked = True
     Me.Description.Locked = True
-
+    Me.PrintCommand.Enabled = False
+    Me.QAComment.Locked = True
+    Exit Sub
 End If
 
-If CUser.AccessLevel > 1 Then
-    Me.LockedDownCheck.Locked = False
-    Me.LockedDownCheck.Visible = True
-    Me.DueDate.Locked = True
-    Me.RequestedBy.Locked = True
-    Me.RequestedDate.Locked = True
-    Me.QRRCheck.Locked = True
-    Me.RequestedWork.Locked = True
-    Me.Comment.Locked = True
-    Me.Description.Locked = True
+
+
+If WO.QRR Then
+    If CUser.AccessLevel < 3 Then
+    
+        Me.Description.Enabled = False
+        Me.LockedDownCheck.Enabled = False
+        Me.LockedDownCheck.Visible = False
+        Me.DueDate.Locked = True
+        Me.RequestedBy.Locked = True
+        Me.RequestedDate.Locked = True
+        Me.QRRCheck.Enabled = False
+        Me.RequestedWork.Locked = True
+        Me.Comment.Locked = True
+        Me.PrintCommand.Enabled = False
+        Me.QAComment.Locked = True
+        Exit Sub
+    ElseIf CUser.AccessLevel > 2 Then
+
+        Me.Description.Locked = True
+        Me.LockedDownCheck.Locked = True
+        Me.LockedDownCheck.Visible = False
+        Me.DueDate.Locked = True
+        Me.RequestedBy.Locked = True
+        Me.RequestedDate.Locked = True
+        Me.QRRCheck.Locked = True
+        Me.RequestedWork.Locked = True
+        Me.Comment.Locked = False
+        Me.PrintCommand.Enabled = True
+        Me.Comment.Locked = True
+        Me.QAComment.Locked = False
+        
+        Exit Sub
+    End If
+
+Else
+
+    If CUser.AccessLevel < 3 Then
+        
+        Me.Description.Locked = False
+        Me.LockedDownCheck.Locked = True
+        Me.LockedDownCheck.Visible = False
+        Me.DueDate.Locked = False
+        Me.RequestedBy.Locked = False
+        Me.RequestedDate.Locked = False
+        Me.QRRCheck.Locked = False
+        Me.RequestedWork.Locked = False
+        Me.Comment.Locked = False
+        Me.QAComment.Locked = True
+        Exit Sub
+    Else
+    
+        Me.LockedDownCheck.Locked = True
+        Me.LockedDownCheck.Visible = False
+        Me.DueDate.Locked = True
+        Me.RequestedBy.Locked = True
+        Me.RequestedDate.Locked = True
+        Me.QRRCheck.Locked = True
+        Me.RequestedWork.Locked = True
+        Me.Comment.Locked = True
+        Me.Description.Locked = True
+        Me.PrintCommand.Enabled = False
+        Me.QAComment.Locked = True
+        Exit Sub
+    End If
+
 End If
+'
+'If CUser.AccessLevel > 1 Then
+'    Me.LockedDownCheck.Locked = False
+'    Me.LockedDownCheck.Visible = True
+'    Me.DueDate.Locked = True
+'    Me.RequestedBy.Locked = True
+'    Me.RequestedDate.Locked = True
+'    Me.QRRCheck.Locked = True
+'    Me.RequestedWork.Locked = True
+'    Me.Comment.Locked = True
+'    Me.Description.Locked = True
+'End If
 
 
 
@@ -152,26 +228,48 @@ WO.Manufacturer = Me.Manufacturer
 WO.Status = Me.Status
 WO.WORequest = Me.RequestedWork
 WO.EngineeringComment = Me.Comment
-WO.WODescription = Me.Description
+'WO.WODescription = Me.Description
 WO.QRR = Me.QRRCheck
-WO.LockedDown = Me.LockedDownCheck
+WO.QAComment = Nz(Me.QAComment, "")
+'WO.LockedDown = Me.LockedDownCheck
 
 
 
 Update_WO (WO.WOID)
 
-If CUser.AccessLevel > 1 Then
+If WO.QRR Then
+ 
+    Call AlertQuality(Me.WONumber)
+
+End If
+
+If WO.QRR Then
+    
+    If CUser.AccessLevel > 2 Then
     MsgBox "Done", vbInformation, ""
-    Set WO = Nothing
+    DoCmd.OpenReport "WOReport1", acViewNormal, , "[id]=" & WO.WOID
     DoCmd.Close acForm, "WorkOrderEditForm"
     DoCmd.OpenForm "MainMenu"
+    Set WO = Nothing
+    Exit Sub
+    End If
+    
+ElseIf CUser.AccessLevel < 3 Then
+        
+    DoCmd.OpenReport "WOReport", acViewNormal, , "[id]=" & WO.WOID
+    DoCmd.Close acForm, "WorkOrderEditForm"
+    DoCmd.OpenForm "MainMenu"
+    Set WO = Nothing
     Exit Sub
 End If
 
-If Not (Me.QRRCheck) Then
-DoCmd.OpenReport "WOReport", acViewNormal, , "[id]=" & WO.WOID
-Else
-DoCmd.OpenReport "WOReport1", acViewNormal, , "[id]=" & WO.WOID
+If Not (Me.QRRCheck) And CUser.AccessLevel < 3 Then
+    
+    DoCmd.OpenReport "WOReport", acViewNormal, , "[id]=" & WO.WOID
+    DoCmd.Close acForm, "WorkOrderEditForm"
+    DoCmd.OpenForm "MainMenu"
+    Set WO = Nothing
+    Exit Sub
 End If
 'Clear_Field
 
