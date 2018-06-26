@@ -152,6 +152,7 @@ Function RandString()
     Dim s As String * 8
     Dim n As Integer
     Dim ch As Integer
+    Randomize
     For n = 1 To Len(s)
         Do
             ch = Rnd() * 127
