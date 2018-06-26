@@ -19,7 +19,7 @@ End Sub
 
 Private Sub Delete_Click()
 
-If (Nz(Equip.id, 0) = 0) Then Exit Sub
+If (Nz(Equip.ID, 0) = 0) Then Exit Sub
 
 If (MsgBox("You're about to delete a record" & vbNewLine & "Are you sure?", vbQuestion + vbYesNo, "Delete?") = vbNo) Then Exit Sub
 Call Delete_Eq
@@ -46,7 +46,7 @@ Me.Manufacturer = Equip.Manufacturer
 Me.StatusCombo = Equip.Status
 Me.SystemCombo = Equip.System
 Me.DateReqistered = Equip.DateRegistered
-Row = PMListRow(Equip.id)
+Row = PMListRow(Equip.ID)
 
 i = UBound(Row)
 
@@ -97,6 +97,11 @@ End Sub
 
 Private Sub Save_Click()
 
+If CUser.AccessLevel > 0 Then
+    MsgBox "Any changes in Equipment can carry out by System Admin", vbInformation, ""
+    Exit Sub
+End If
+
 Dim RowNumber As Long
 
 If (Me.StatusCombo = "Spare" And Me.EquipmentTypeCombo = "Instrument") Then
@@ -140,12 +145,12 @@ Equip.Manufacturer = Me.Manufacturer
 Equip.Status = Me.StatusCombo
 
 
-Update_Eq (Equip.id)
-DeleteGenPM (Equip.id)
+Update_Eq (Equip.ID)
+DeleteGenPM (Equip.ID)
 
 If Equip.Status = "In-Service" Or (Equip.Status = "Spare" And Equip.EquipmentType = "Instrument") Then
-    Call Save_GenPM(Arr(), Equip.id)
-    Call EquipmentsAudit(Arr(), Equip.id, "Edit Equipment")
+    Call Save_GenPM(Arr(), Equip.ID)
+    Call EquipmentsAudit(Arr(), Equip.ID, "Edit Equipment")
 Else
     Call EquipmentsAudit_noPM("Edit Equipment")
 End If
