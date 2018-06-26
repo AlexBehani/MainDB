@@ -104,3 +104,46 @@ Set EqAdt = Nothing
 Set db = Nothing
     
 End Sub
+
+Public Function New_WO_Audit()
+
+
+Dim db As Database
+Dim WORs As Recordset
+
+Set db = CurrentDb
+Set WORs = db.OpenRecordset("WOaudit", , dbAppendOnly)
+
+WORs.AddNew
+
+WORs!WODescription = WO.WODescription
+'WORs!ModelNumber = WO.ModelNumber
+'WORs!WOType = WO.WOType
+WORs!WORequest = WO.WORequest
+WORs!AssignedTo = WO.AssignedTo
+WORs!Status = WO.Status
+'WORs!Completed = False
+WORs!RequestedDate = WO.RequestedDate
+WORs!DueDate = WO.DueDate
+WORs!WONumber = WO.WONumber
+WORs!AssetNumber = WO.AssetNumber
+WORs!Manufacturer = WO.Manufacturer
+WORs!EngineeringComment = WO.EngineeringComment
+WORs!RequestBy = WO.RequestBy
+WORs!FormatWONumber = WO.FormatedWONUmber
+WORs!QRrequired = WO.QRR
+WORs!EqDescription = WO.EqDescription
+WORs!QAComment = ""
+WORs!EngQAComment = WO.EngineeringComment
+'WO.WOID = WORs!WOID
+WORs!StatusWO = "New WO"
+WORs!UserName = CUser.FullName
+WORs!DateStamp = Date
+WORs!TimeStamp = Time()
+WORs.Update
+
+
+Set db = Nothing
+Set WORs = Nothing
+   
+End Function
