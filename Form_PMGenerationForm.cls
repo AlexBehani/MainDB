@@ -20,18 +20,22 @@ End Sub
 
 Private Sub PMGenCommand_Click()
 Dim i As Integer
-
+Dim j As Integer
 MsgBox "It might take a few minutes!" & vbNewLine & vbNewLine _
 & "please wait", vbInformation + vbOKOnly, ""
+
+Call PMGnrAudit
 Call DeleteOldPM
 Call PMGenerator
 
+'i = RightOUtterJOin
 i = RightOUtterJOin
-If i = 0 Then
+j = PMWO_Create(i)
+If j = 0 Then
 MsgBox "You are all set!", vbInformation, ""
 Else
 MsgBox "Done" & vbNewLine & vbNewLine & _
-"Generated " & i & " PM(s)", vbInformation, ""
+"Generated " & j & " PM(s)", vbInformation, ""
 End If
 'Call DeleteOldPM
 
