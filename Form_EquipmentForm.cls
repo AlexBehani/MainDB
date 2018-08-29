@@ -19,9 +19,11 @@ End Sub
 
 
 
+
+
 Private Sub Delete_Click()
 
-If (Nz(Equip.id, 0) = 0) Then Exit Sub
+If (Nz(Equip.ID, 0) = 0) Then Exit Sub
 
 If (MsgBox("You're about to delete a record" & vbNewLine & "Are you sure?", vbQuestion + vbYesNo, "Delete?") = vbNo) Then Exit Sub
 Call Delete_Eq
@@ -37,6 +39,15 @@ Private Sub Form_Load()
 Set Equip = New Equipments
 Equip.Edit = False
 Me.AssetNumber = AvailAssetN
+
+End Sub
+
+Private Sub NoPMCheck_AfterUpdate()
+If Me.NoPMCheck.value = True Then
+MsgBox "Please be informed that" & _
+        vbNewLine & "No PM will be generated for the Equipment", vbCritical + vbOKOnly, "!"
+        
+End If
 
 End Sub
 
@@ -110,42 +121,47 @@ Dim j As Integer
 
 j = Me.PMList.ListCount
 
-If Not (j > 0) Then
-MsgBox "Please select PM", vbCritical, ""
-Exit Sub
-End If
-'i = Me.PMList.ListCount
-'ReDim test(1 To i)
-ReDim Arr(j)
+    Equip.EquipmentNumber = Nz(Me.EquipmentN, 0)
+    Equip.Description = Me.Description
+    Equip.AssetNumber = Nz(Me.AssetNumber, "")
+    Equip.SerialNumber = Me.SerialNumber
+    Equip.ModelNumber = Me.ModelNumber
+    Equip.DateRegistered = Me.DateReqistered
+    Equip.EquipmentType = Me.EquipmentTypeCombo
+    Equip.Manufacturer = Me.Manufacturer
+    Equip.Status = Me.StatusCombo
 
-For i = 0 To j - 1
+If Me.NoPMCheck = False Then
 
-    Arr(i) = Me.PMList.Column(3, i)
+    If Not (j > 0) Then
+        MsgBox "Please select PM", vbCritical, ""
+        Exit Sub
+    End If
+    'i = Me.PMList.ListCount
+    'ReDim test(1 To i)
+    ReDim Arr(j)
+    
+    For i = 0 To j - 1
+    
+        Arr(i) = Me.PMList.Column(3, i)
+    
+    Next i
+    
+    RowNumber = Save_Eq
+    
+    If Equip.Status = "In-Service" Or (Equip.Status = "Spare" And Equip.EquipmentType = "Instrument") Then
+        Call Save_GenPM(Arr(), RowNumber)
+        Call EquipmentsAudit(Arr(), RowNumber, "New Equipment")
+    Else
+        EquipmentsAudit_noPM ("New Equipment")
+    End If
 
-Next i
+ElseIf Me.NoPMCheck = True Then
 
-
-Equip.EquipmentNumber = Nz(Me.EquipmentN, 0)
-Equip.Description = Me.Description
-Equip.AssetNumber = Nz(Me.AssetNumber, "")
-Equip.SerialNumber = Me.SerialNumber
-Equip.ModelNumber = Me.ModelNumber
-Equip.DateRegistered = Me.DateReqistered
-Equip.EquipmentType = Me.EquipmentTypeCombo
-Equip.Manufacturer = Me.Manufacturer
-'Equip.System = Nz(Me.SystemCombo, "")
-Equip.Status = Me.StatusCombo
-
-
-RowNumber = Save_Eq
-
-If Equip.Status = "In-Service" Or (Equip.Status = "Spare" And Equip.EquipmentType = "Instrument") Then
-    Call Save_GenPM(Arr(), RowNumber)
-    Call EquipmentsAudit(Arr(), RowNumber, "New Equipment")
-Else
+    RowNumber = Save_Eq
     EquipmentsAudit_noPM ("New Equipment")
+    
 End If
-
 'Call Clear_Field
 'Me.PMList.RowSource = ""
 'Me.Equipments_subform.Requery
