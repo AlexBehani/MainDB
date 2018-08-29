@@ -48,11 +48,11 @@ Ydate = Year(GenPM!DateRegistered)
                     PMWO!Completed = False
 '                    PMWO!Task = GenPM!TaskName
                     PMWO!Status = GenPM!Status
-                    PMWO!DueDate = DueDate(GenPM!DateRegistered)
+                    PMWO!DueDate = RectifyDate(DueDate(GenPM!DateRegistered))
                     PMWO!Manufacturer = GenPM!Manufacturer
 '                    PMWO!WONumber = AvailNo
 '                    PMWO!formatwonumber = PMWOFormatNo("PMWO", AvailNo)
-                    PMWO!GPMid = GenPM!id
+                    PMWO!GPMid = GenPM!ID
                     PMWO!DateRegistered = RectifyDate(GenPM!DateRegistered)
                     PMWO!EqDescription = GenPM!EqDescription
                     PMWO.Update
@@ -61,7 +61,7 @@ Ydate = Year(GenPM!DateRegistered)
                     
         End If
         
-        If GenPM!Frequency = "Bi Annaully" Then
+        If GenPM!Frequency = "Biennially" Then
             If (Ydate <> YCr And Mdate = MCr And YCr > Ydate) Then
                 If ((YCr - Ydate) Mod 2) = 0 Then
                     
@@ -76,11 +76,11 @@ Ydate = Year(GenPM!DateRegistered)
                     PMWO!Completed = False
 '                    PMWO!Task = GenPM!TaskName
                     PMWO!Status = GenPM!Status
-                    PMWO!DueDate = DueDate(GenPM!DateRegistered)
+                    PMWO!DueDate = RectifyDate(DueDate(GenPM!DateRegistered))
                     PMWO!Manufacturer = GenPM!Manufacturer
 '                    PMWO!WONumber = AvailNo
 '                    PMWO!formatwonumber = PMWOFormatNo("PMWO", AvailNo)
-                    PMWO!GPMid = GenPM!id
+                    PMWO!GPMid = GenPM!ID
                     PMWO!DateRegistered = RectifyDate(GenPM!DateRegistered)
                     PMWO!EqDescription = GenPM!EqDescription
                     PMWO.Update
@@ -104,11 +104,11 @@ Ydate = Year(GenPM!DateRegistered)
                     PMWO!Completed = False
 '                    PMWO!Task = GenPM!TaskName
                     PMWO!Status = GenPM!Status
-                    PMWO!DueDate = DueDate(GenPM!DateRegistered)
+                    PMWO!DueDate = RectifyDate(DueDate(GenPM!DateRegistered))
                     PMWO!Manufacturer = GenPM!Manufacturer
 '                    PMWO!WONumber = AvailNo
 '                    PMWO!formatwonumber = PMWOFormatNo("PMWO", AvailNo)
-                    PMWO!GPMid = GenPM!id
+                    PMWO!GPMid = GenPM!ID
                     PMWO!DateRegistered = RectifyDate(GenPM!DateRegistered)
                     PMWO!EqDescription = GenPM!EqDescription
                     PMWO.Update
@@ -131,11 +131,11 @@ Ydate = Year(GenPM!DateRegistered)
                     PMWO!Completed = False
 '                    PMWO!Task = GenPM!TaskName
                     PMWO!Status = GenPM!Status
-                    PMWO!DueDate = DueDate(GenPM!DateRegistered)
+                    PMWO!DueDate = RectifyDate(DueDate(GenPM!DateRegistered))
                     PMWO!Manufacturer = GenPM!Manufacturer
 '                    PMWO!WONumber = AvailNo
 '                    PMWO!formatwonumber = PMWOFormatNo("PMWO", AvailNo)
-                    PMWO!GPMid = GenPM!id
+                    PMWO!GPMid = GenPM!ID
                     PMWO!DateRegistered = RectifyDate(GenPM!DateRegistered)
                     PMWO!EqDescription = GenPM!EqDescription
                     PMWO.Update
@@ -156,11 +156,11 @@ Ydate = Year(GenPM!DateRegistered)
                     PMWO!Completed = False
 '                    PMWO!Task = GenPM!TaskName
                     PMWO!Status = GenPM!Status
-                    PMWO!DueDate = DueDate(GenPM!DateRegistered)
+                    PMWO!DueDate = RectifyDate(DueDate(GenPM!DateRegistered))
                     PMWO!Manufacturer = GenPM!Manufacturer
 '                    PMWO!WONumber = AvailNo
 '                    PMWO!formatwonumber = PMWOFormatNo("PMWO", AvailNo)
-                    PMWO!GPMid = GenPM!id
+                    PMWO!GPMid = GenPM!ID
                     PMWO!DateRegistered = RectifyDate(GenPM!DateRegistered)
                     PMWO!EqDescription = GenPM!EqDescription
                     PMWO.Update
@@ -180,11 +180,11 @@ Ydate = Year(GenPM!DateRegistered)
                     PMWO!Completed = False
 '                    PMWO!Task = GenPM!TaskName
                     PMWO!Status = GenPM!Status
-                    PMWO!DueDate = DueDate(GenPM!DateRegistered)
+                    PMWO!DueDate = RectifyDate(DueDate(GenPM!DateRegistered))
                     PMWO!Manufacturer = GenPM!Manufacturer
 '                    PMWO!WONumber = AvailNo
 '                    PMWO!formatwonumber = PMWOFormatNo("PMWO", AvailNo)
-                    PMWO!GPMid = GenPM!id
+                    PMWO!GPMid = GenPM!ID
                     PMWO!DateRegistered = RectifyDate(GenPM!DateRegistered)
                     PMWO!EqDescription = GenPM!EqDescription
                     PMWO.Update
@@ -207,11 +207,11 @@ Ydate = Year(GenPM!DateRegistered)
                     PMWO!Completed = False
 '                    PMWO!Task = GenPM!TaskName
                     PMWO!Status = GenPM!Status
-                    PMWO!DueDate = DueDate(GenPM!DateRegistered)
+                    PMWO!DueDate = RectifyDate(DueDate(GenPM!DateRegistered))
                     PMWO!Manufacturer = GenPM!Manufacturer
 '                    PMWO!WONumber = AvailNo
 '                    PMWO!formatwonumber = PMWOFormatNo("PMWO", AvailNo)
-                    PMWO!GPMid = GenPM!id
+                    PMWO!GPMid = GenPM!ID
                     PMWO!DateRegistered = RectifyDate(GenPM!DateRegistered)
                     PMWO!EqDescription = GenPM!EqDescription
                     PMWO.Update
@@ -233,11 +233,11 @@ Ydate = Year(GenPM!DateRegistered)
                     PMWO!Completed = False
 '                    PMWO!Task = GenPM!TaskName
                     PMWO!Status = GenPM!Status
-                    PMWO!DueDate = DueDate(GenPM!DateRegistered)
+                    PMWO!DueDate = RectifyDate(DueDate(GenPM!DateRegistered))
                     PMWO!Manufacturer = GenPM!Manufacturer
 '                    PMWO!WONumber = AvailNo
 '                    PMWO!formatwonumber = PMWOFormatNo("PMWO", AvailNo)
-                    PMWO!GPMid = GenPM!id
+                    PMWO!GPMid = GenPM!ID
                     PMWO!DateRegistered = RectifyDate(GenPM!DateRegistered)
                     PMWO!EqDescription = GenPM!EqDescription
                     PMWO.Update
@@ -258,11 +258,11 @@ Ydate = Year(GenPM!DateRegistered)
                     PMWO!Completed = False
 '                    PMWO!Task = GenPM!TaskName
                     PMWO!Status = GenPM!Status
-                    PMWO!DueDate = DueDate(GenPM!DateRegistered)
+                    PMWO!DueDate = RectifyDate(DueDate(GenPM!DateRegistered))
                     PMWO!Manufacturer = GenPM!Manufacturer
 '                    PMWO!WONumber = AvailNo
 '                    PMWO!formatwonumber = PMWOFormatNo("PMWO", AvailNo)
-                    PMWO!GPMid = GenPM!id
+                    PMWO!GPMid = GenPM!ID
                     PMWO!DateRegistered = RectifyDate(GenPM!DateRegistered)
                     PMWO!EqDescription = GenPM!EqDescription
                     PMWO.Update
@@ -343,14 +343,14 @@ Set db = Nothing
 'Set GPM = Nothing
 End Sub
 
-Public Function UPdate_DateRegister(id As Integer, DateReg As Date)
+Public Function UPdate_DateRegister(ID As Integer, DateReg As Date)
 
 Dim db As Database
 Dim GPM As Recordset
 
 ' have to make the record more specific
 Set db = CurrentDb
-Set GPM = db.OpenRecordset("SELECT * FROM GeneralPM WHERE ID= " & id)
+Set GPM = db.OpenRecordset("SELECT * FROM GeneralPM WHERE ID= " & ID)
 
 GPM.MoveFirst
 If (GPM!DateRegistered = DateReg) Then

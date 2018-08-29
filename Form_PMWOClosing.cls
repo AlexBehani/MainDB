@@ -9,7 +9,7 @@ Attribute VB_PredeclaredId = True
 Attribute VB_Exposed = False
 Private Sub Cancel_Click()
 On Error GoTo Err_Handel
-If Not (WOClosing Is noting) Then Set WOClosing = Nothing
+If Not (WOClosing Is Nothing) Then Set WOClosing = Nothing
 DoCmd.Close acForm, "PMWOClosing"
 DoCmd.OpenForm "MainMenu"
 Exit Sub
@@ -33,14 +33,16 @@ Private Sub FilterCombo_AfterUpdate()
 
 If Me.FilterCombo = "Completed" Then
 
-    Me.WODropDown.RowSource = "SELECT PMWO.FormatWONumber, PMWO.AssetNumber," & _
-    " PMWO.Manufacturer, PMWO.DueDate, PMWO.WOID, PMWO.taskComment, PMWO.EngineeringComment " & _
-    "FROM PMWO WHERE (((PMWO.EngineeringComment) Is Not Null) AND ((PMWO.Completed)=True));"
+        Me.WODropDown.RowSource = "SELECT PMWO.FormatWONumber, PMWO.AssetNumber, PMWO.Manufacturer, PMWO.DueDate, " & _
+                                    "PMWO.WOID, PMWO.taskComment, PMWO.EngineeringComment, PMWO.Completed " & _
+                                    "FROM PMWO WHERE ((Nz(PMWO.EngineeringComment,'')<>'') AND " & _
+                                    "((PMWO.Completed)=True));"
 ElseIf Me.FilterCombo = "Not Completed" Then
     
-    Me.WODropDown.RowSource = "SELECT PMWO.FormatWONumber, PMWO.AssetNumber, PMWO.Manufacturer, " & _
-    "PMWO.DueDate, PMWO.WOID, PMWO.taskComment, PMWO.EngineeringComment FROM PMWO " & _
-    "WHERE (((PMWO.EngineeringComment) Is Not Null) AND ((PMWO.Completed)=False));"
+    Me.WODropDown.RowSource = "SELECT PMWO.FormatWONumber, PMWO.AssetNumber, PMWO.Manufacturer, PMWO.DueDate, " & _
+                                    "PMWO.WOID, PMWO.taskComment, PMWO.EngineeringComment, PMWO.Completed " & _
+                                    "FROM PMWO WHERE ((Nz(PMWO.EngineeringComment,'')<>'') AND " & _
+                                    "((PMWO.Completed)=False));"
 End If
     
 
@@ -87,13 +89,13 @@ Call Save_PMWOII
 'Clear_Field
 MsgBox "Done", vbInformation, ""
 
-If Not (WOClosing Is noting) Then Set WOClosing = Nothing
+If Not (WOClosing Is Nothing) Then Set WOClosing = Nothing
 
 DoCmd.Close acForm, "PMWOClosing"
 DoCmd.OpenForm "MainMenu"
 Exit Sub
 Err:
-If Not (WOClosing Is noting) Then Set WOClosing = Nothing
+If Not (WOClosing Is Nothing) Then Set WOClosing = Nothing
 MsgBox "Error happened!", vbCritical, "Error"
 Call Errs(Err.Description, Err.LastDllError, Err.Number, Err.Source)
 End Sub
